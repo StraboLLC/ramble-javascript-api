@@ -1,45 +1,37 @@
-/**
- * Ramble Javascript API
- * @author Will Potter
- * @attribution
- */
-
-/**
- * Strabo Object
- */
 var S = {};
-
-/**
- * Utilities Class for Strabo Functions
- * @type {Object}
- */
+S.Config = {
+	SITE_BASE_URL: "http://s3.amazonaws.com/api.ramble",
+	MEDIA_URL: "http://s3.amazonaws.com/api.ramble/data"
+};
 S.Util = {
-	/**
-	 * Converts point responses from the server into L.LatLngs
-	 * @param  {Array} points An array of point object responses from the server.
-	 * @return {Array}        An array of L.LatLngs of the points in the track.
-	 */
-	pointsToLatLngs: function (points) {
+	pointsToLatLngs: function(points) {
 		var results = [];
-		for(var x in points) {
-			results.push(new L.LatLng(points[x].coords[0],points[x].coords[1]));
+		for (var x in points) {
+			results.push(new L.LatLng(points[x].latitude, points[x].latitude));
 		}
 		return results;
-	}
+	},
+	videoURL: function(token) {
+		return S.Config.MEDIA_URL + "/" + token + "/" + token;
+	},
+	createVideo:function(token) {
+		var video = document.createElement('video');
+		if (video.canPlayType('video/webm')) video.src = S.Util.videoURL(token) + ".webm";
+		else if (video.canPlayType('video/mp4')) video.src = S.Util.videoURL(token) + ".mp4";
+		else if (video.canPlayType('video/ogg')) video.src = S.Util.videoURL(token) + ".ogg";
+		else video.innerHTML = S.VIDEO_ERROR_CANNOT_PLAY_TYPE;
+		return video;
+	},
+	VIDEO_ERROR_CANNOT_PLAY_TYPE: "Sorry, your browser cannot play HTML5 Video. Please try using <a href='http://google.com/chrome'>Google Chrome</a> for best results"
 
 };
-/**
- * A leaflet-based marker that can handle icon rotation.
- * @constructor Creates a new map marker.
- * @param {L.LatLng} point The position of the marker on the map.
- */
 S.Marker = L.Marker.extend({
 	_reset: function() {
 		var pos = this._map.latLngToLayerPoint(this._latlng).round();
 
 		L.DomUtil.setPosition(this._icon, pos);
 		if (this._shadow) {
-			this._shadow.style.display="none";
+			this._shadow.style.display = "none";
 		}
 
 		if (this.options.iconAngle) {
@@ -55,10 +47,7 @@ S.Marker = L.Marker.extend({
 
 		this._icon.style.zIndex = pos.y;
 	},
-	/**
-	 * Sets the angle of an Icon.
-	 * @param {Number} iconAngle Degrees of rotation for the icon.
-	 */
+	
 	setIconAngle: function(iconAngle) {
 
 		this.options.iconAngle = iconAngle;
@@ -67,22 +56,13 @@ S.Marker = L.Marker.extend({
 			this._reset();
 		}
 	},
-	/**
-	 * Returns the angle of rotation in an angle.
-	 * @return {Number} Degrees of rotation for an icon.
-	 */
+	
 	getIconAngle: function() {
 		return this.options.iconAngle || 0;
 	}
 });
 
-/**
- * The primary class for the Strabo Ramble API. Creates a new Ramble Object (photo/video).
- * @constructor 				Creates a new instance of a Ramble Object.
- * @param {L.Map} 	map    		An instance of a leaflet map.
- * @param {String} 	rambleID 	The unique identifier for a ramble ID
- * @param {Object} 	opts		An array of options for S.Ramble.
- */
+
 S.Ramble = function(map, rambleID, opts) {
 	this._listeners = {};
 	// Constructor Error Handling
@@ -92,132 +72,48 @@ S.Ramble = function(map, rambleID, opts) {
 	if (!rambleID) {
 		console.error("rambleID parameter cannot be undefined.");
 	}
-	/**
-	 * Ramble Unique Identifier. Used to query the server for information regarding a ramble.
-	 * @type {String}
-	 */
-	this.id           = rambleID;
-	/**
-	 * Object to hold options related to a Ramble.
-	 * @type {Object}
-	 */
-	this._options     = opts;
-	/**
-	 * An instance of a L.Map to draw the S.Ramble on.
-	 * @type {L.Map}
-	 */
-	this.map          = map;
+
+	this.id = rambleID;
 	
-	/**
-	 * Width of the Map
-	 * @type {Number}
-	 */
-	this.MAP_WIDTH        = map.getSize().x;
-	/**
-	 * Height of the Map
-	 * @type {Number}
-	 */
-	this.MAP_HEIGHT       = map.getSize().y;
-	/**
-	 * Options for the Map
-	 * @type {Object}
-	 */
-	this._options     = opts || {};
+	this._options = opts;
+	
+	this.map = map;
 
-	this.videoLoaded  = false;
+	this.MAP_WIDTH = map.getSize().x;
+	this.MAP_HEIGHT = map.getSize().y;
+	
+	this._options = opts || {};
 
-	/**
-	 * Index for the Points Array
-	 * @default 0
-	 * @type {Number}
-	 */	
+	this.videoLoaded = false;
+
 	this.currentPoint = 0;
 	
-	/* Element Properties */
-	/**
-	 * Ramble Title
-	 * @type {String}
-	 */
-	this.title        = "";
-	/**
-	 * Ramble Starting Latitude
-	 * @type {Number}
-	 */
-	this.latitude     = 0;
-	/**
-	 * Ramble Starting Longitude
-	 * @type {Number}
-	 */
-	this.longitude    = 0;
-	/**
-	 * Ramble Starting Heading
-	 * @type {Number}
-	 */
-	this.heading      = 0;
-	/**
-	 * An array of geodata information to be played from the server.
-	 * @type {Array}
-	 */
-	this.points       = [];
-	/**
-	 * The user-generated description of the Ramble.
-	 * @type {String}
-	 */
-	this.description  = "";
-	/**
-	 * The unique token used for querying the server and pulling a Ramble from the Ramble API.
-	 * @type {String}
-	 */
-	this.token        = "";
-	/**
-	 * Date of Capture for the Ramble
-	 * @type {Date}
-	 */
-	this.createdAt    = null;
-	/**
-	 * Date of Upload for the Ramble
-	 * @type {Date}
-	 */
-	this.uploadedAt   = null;
-	/**
-	 * Type of Track for the Ramble (Video vs. Photo)
-	 * @type {String}
-	 */
-	this.type         = null;
-	/**
-	 * The video element holding the video component of the Ramble.
-	 * @type {HTMLVideoElement}
-	 */
-	this.video        = null;
-	/**
-	 * The image element holding the image component of the Ramble.
-	 * @type {Image}
-	 */
-	this.photo        = null;
-	/**
-	 * The starting L.LatLng for the Track.
-	 * @type {L.LatLng}
-	 */
-	this.start        = null;
-	/**
-	 * The L.Marker for the Track
-	 * @type {L.Marker}
-	 */
-	this.marker       = null;
-	/**
-	 * The L.Polyline representing the path of the Track.
-	 * @type {L.Polyline}
-	 */
-	this.route        = null;
+	this.title = "";
+	
+	this.latitude = 0;
+	
+	this.longitude = 0;
+	this.heading = 0;
+	this.points = [];
+	this.description = "";
+	this.token = "";
+	this.createdAt = null;
+	this.uploadedAt = null;
+	this.type = null;
+	this.video = null;
+	this.photo = null;
+	this.start = null;
+	this.marker = null;
+	this.route = null;
 
 	// Talk to the Server to Retrieve Geo-Data
 	this.pull();
-	
+
 
 }
 
 S.Ramble.prototype.pull = function() {
-	var theObject = this;
+	var r = this;
 	var xhr;
 	if (window.XMLHttpRequest) {
 		xhr = new XMLHttpRequest();
@@ -228,76 +124,70 @@ S.Ramble.prototype.pull = function() {
 		if (xhr.readyState === 4) {
 			if (xhr.status === 200) {
 				var response = JSON.parse(xhr.responseText);
-				response              = response.response;
-				theObject.title       = response.title;
-				theObject.latitude    = parseFloat(response.latitude);
-				theObject.longitude   = parseFloat(response.longitude);
-				theObject.heading     = parseFloat(response.heading);
-				theObject.points      = response.points;
-				theObject.description = response.description;
-				theObject.token       = response.token;
-				theObject.createdAt   = response.created_at;
-				theObject.uploadedAt  = response.uploaded_at;
-				theObject.type        = response.type;
-				
-				theObject.start       = new L.LatLng(theObject.latitude,theObject.longitude);
-				theObject._latLngs    = S.Util.pointsToLatLngs(theObject.points);
-				theObject.marker      = new S.Marker(theObject.start);
+				response = response.response;
+				console.log("Response:",response);
+				r.title = response.title;
+				r.latitude = parseFloat(response.latitude);
+				r.longitude = parseFloat(response.longitude);
+				r.heading = parseFloat(response.heading);
+				r.points = response.points;
+				r.description = response.description;
+				r.token = response.token;
+				r.createdAt = response.created_at;
+				r.uploadedAt = response.uploaded_at;
+				r.type = response.type;
 
-				theObject.map.addLayer(theObject.marker);
-				if(theObject._latLngs.length > 1) {
-					theObject.route = new L.Polyline(theObject._latLngs);
-					theObject.map.addLayer(theObject.route);
+				r.start = new L.LatLng(r.latitude, r.longitude);
+				r._latLngs = S.Util.pointsToLatLngs(r.points);
+				r.marker = new S.Marker(r.start);
+
+				r.map.addLayer(r.marker);
+				if (r._latLngs.length > 1) {
+					r.route = new L.Polyline(r._latLngs);
+					r.map.addLayer(r.route);
 				}
-				if (theObject.type == "video") {
-					theObject.video = document.createElement('video');
-					video.addEventListener('timeupdate', theObject.updateMap);
-				} else if (theObject.type == "photo") {
-					theObject.photo = new Image();
+				if (r.type == "video") {
+					r.video = S.Ramble.createVideo(r.token);
+					r.marker.bindPopup(r.video);
+					r.video.addEventListener('timeupdate', r.updateMap);
+				} else if (r.type == "photo") {
+					r.photo = new Image();
 				}
-				theObject.fireEvent('mapdraw');
+				r.fireEvent('mapdraw');
 			} else {
 				console.log('There was a problem with the request.');
 			}
 		}
 	}
-	xhr.open('GET', "http://localhost/api.strabogis.com/examples/test.json");
+	xhr.open('GET', S.Config.MEDIA_URL+"/"+r.id+"/"+r.id+".json");
 	xhr.send();
 };
 
-S.Ramble.prototype.updateMap = function() {};
+S.Ramble.prototype.createPopupContent() {
+	var container = document.createElement('div');
+	var title = document.createElement('div');
+
+	return container;
+};
+S.Ramble.prototype.updateMap = function() {
+
+};
 
 S.Ramble.prototype.closeTrack = function() {};
 
 S.Ramble.prototype.loadTrack = function() {};
 
 
-
-/**
- * Plays the video if the video element isn't null.
- */
 S.Ramble.prototype.play = function() {
 	if (this.video) {
 		this.video = play();
 	}
 };
-
-
-
-/**
- * Pauses the video if the video element isn't null.
- */
 S.Ramble.prototype.pause = function() {
 	if (this.video) {
 		this.video = pause();
 	}
 };
-
-
-
-/**
- * Toggles the playing vs. paused with the video.
- */
 S.Ramble.prototype.playPause = function() {
 	if (this.video) {
 		if (this.video.paused) {
@@ -307,15 +197,6 @@ S.Ramble.prototype.playPause = function() {
 		}
 	}
 };
-
-
-
-/**
- * Adds an event listener to an object.
- * @param {String}   type    The type of event to listen for.
- * @param {Function} fn      The callback function to perform upon execution of the event.
- * @param {Object}   context The scope of the callback function.
- */
 S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	var events = this._events = this._events || {};
 	events[type] = events[type] || [];
@@ -325,22 +206,10 @@ S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	});
 	return this;
 };
-/**
- * Checks if an object has a certain event listener.
- * @param  {String}  type The type of event to check for.
- * @return {Boolean}      True if an event listener exists.
- */
 S.Ramble.prototype.hasEventListeners = function(type) {
 	var k = '_events';
 	return (k in this) && (type in this[k]) && (this[k][type].length > 0);
 };
-/**
- * Removes a specific event listener from an Object.
- * @param  {String}   type    The type of event to remove.
- * @param  {Function} fn      The callback function to execute upon removal.
- * @param  {Object}   context The scope of the callback function.
- * @return {Object}           The object that is triggering the event.
- */
 S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -348,19 +217,13 @@ S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 
 	for (var i = 0, events = this._events, len = events[type].length; i < len; i++) {
 		if (
-		(events[type][i].action === fn) && (!context || (events[type][i].context === context))) {
+			(events[type][i].action === fn) && (!context || (events[type][i].context === context))) {
 			events[type].splice(i, 1);
-			return this;
-		}
+		return this;
 	}
-	return this;
+}
+return this;
 };
-/**
- * Triggers event listeners by performing an event.
- * @param  {String} type The type of event being performed.
- * @param  {Object} data The data to pass to the callback function.
- * @return {Object}      The object that is triggering the event.
- */
 S.Ramble.prototype.fireEvent = function(type, data) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -379,4 +242,3 @@ S.Ramble.prototype.fireEvent = function(type, data) {
 
 	return this;
 };
-

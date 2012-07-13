@@ -4,6 +4,7 @@
 		"latitude": 43.62439567002734,
 		"longitude": -72.5178337097168,
 		"heading": 90.000000,
+		"token": "",
 		"points": [{
 			"timestamp": 0.0000,
 			"coords": [43.625025, -72.5],
@@ -19,6 +20,6 @@
 		"token": "ASDFASDFASDFASDFASDFASDF",
 		"createdAt": "",
 		"uploadedAt": "",
-		"type": "Video"
+		"type": "photo"
 	}
 }
