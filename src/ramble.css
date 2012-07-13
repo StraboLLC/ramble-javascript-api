@@ -1,0 +1,13 @@
+.ramble-viewer {
+	border-radius: 4px;
+	overflow:hidden;
+}
+#ramble-map {
+
+	float:left;
+}
+#ramble-video {
+	background:black;
+	float:left;
+}
+
