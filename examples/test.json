@@ -1,0 +1,24 @@
+{
+	"response": {
+		"title": "Main St. Woodstock",
+		"latitude": 43.62439567002734,
+		"longitude": -72.5178337097168,
+		"heading": 90.000000,
+		"points": [{
+			"timestamp": 0.0000,
+			"coords": [43.625025, -72.5],
+			"heading": 88.0000,
+			"accuracy": 0.00000
+		}, {
+			"timestamp": 0.0100,
+			"coords": [43.625025, -72.55],
+			"heading": 88.0000,
+			"accuracy": 0.00000
+		}],
+		"description": "Looking over Central Woodstock at Main Street.",
+		"token": "ASDFASDFASDFASDFASDFASDF",
+		"createdAt": "",
+		"uploadedAt": "",
+		"type": "Video"
+	}
+}
