@@ -4,15 +4,12 @@
 	<meta charset="UTF-8">
 	<title>API Test</title>
 
-	<link rel="stylesheet" href="../libs/leaflet/leaflet.css" type="text/css" />
-	<link rel="stylesheet" href="../src/ramble.css" type="text/css" />
+	<link rel="stylesheet" href="../src/libs/leaflet/leaflet.css" type="text/css" />
+	<link rel="stylesheet" href="../build/ramble.min.css" type="text/css" />
 
 
-	<script type="text/javascript" src="../libs/jquery.min.js"></script>
-	<script type="text/javascript" src="../libs/leaflet/leaflet.js"></script>
-
-
-
+	<script type="text/javascript" src="../src/libs/jquery.min.js"></script>
+	<script type="text/javascript" src="../src/libs/leaflet/leaflet.js"></script>
 	<script type="text/javascript" src="../src/ramble.js"></script>
 
 	
@@ -24,19 +21,21 @@
 			map = new L.Map('map', {});
 			map.setView(new L.LatLng(43.62439567002734,-72.5178337097168),13);
 			// Open Street Maps
-			map.addLayer(new L.TileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'));
+			var openCycleMap = new L.TileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png');
+			var stamenTerrainMap = new L.TileLayer('http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png');
+			var esriWorldTopo = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, attribution: 'Tiles: &copy; Esri' });
+			var esriWorldImagery = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, attribution: 'Tiles: &copy; Esri' });
+			var basemaps = {
+				"OpenCycleMap":openCycleMap,
+				"Stamen Terrain":stamenTerrainMap,
+				"ESRI World Topo":esriWorldTopo,
+				"ESRI World Imagery":esriWorldImagery	
+			};
+			var layersControl = new L.Control.Layers(basemaps);
+			map.addLayer(openCycleMap);
+			map.addControl(layersControl);
 
-			// Stamen Map Layer
-			// map.addLayer(new L.TileLayer('http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png'));
-
-			// ESRI World Topo Layer
-			// map.addLayer(new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, attribution: 'Tiles: &copy; Esri' }));
-
-			// ESRI Satellite Imagery
-			// map.addLayer(new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, attribution: 'Tiles: &copy; Esri' }));
-			// map.addLayer(new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, attribution: 'Tiles: &copy; Esri' }));
-
-			 t = new S.Ramble(map,"fbf7ddb41122727a05725ddc5ef28498");
+			t = new S.Ramble(map,"fbf7ddb41122727a05725ddc5ef28498");
 		});
 	</script>
 

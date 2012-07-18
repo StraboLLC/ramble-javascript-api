@@ -1,13 +1,14 @@
+"use strict";
 var S = {};
 S.Config = {
-	SITE_BASE_URL: "http://s3.amazonaws.com/api.ramble",
-	MEDIA_URL: "http://s3.amazonaws.com/api.ramble/data"
+	SITE_BASE_URL: "http://api.strabo.co/",
+	MEDIA_URL: "http://api.strabo.co/data"
 };
 S.Util = {
 	pointsToLatLngs: function(points) {
 		var results = [];
 		for (var x in points) {
-			results.push(new L.LatLng(points[x].latitude, points[x].latitude));
+			results.push(new L.LatLng(points[x].latitude, points[x].longitude));
 		}
 		return results;
 	},
@@ -27,6 +28,8 @@ S.Util = {
 	ERROR_CANNOT_PLAY_TYPE: "Sorry, your browser cannot play HTML5 Video. Please try using <a href='http://google.com/chrome'>Google Chrome</a> for best results",
 	ERROR_NOT_VIDEO: "This method can only be called on video typed rambles.",
 	ERROR_NOT_PHOTO: "This method can only be called on photo typed rambles."
+
+
 };
 S.Marker = L.Marker.extend({
 	_reset: function() {
@@ -47,6 +50,30 @@ S.Marker = L.Marker.extend({
 		}
 		this._icon.style.zIndex = pos.y;
 	},
+	_zoomAnimation: function (opt) {
+		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center);
+
+		this._setPos(pos);
+	},
+	_setPos: function (pos) {
+		L.DomUtil.setPosition(this._icon, pos);
+
+		if (this._shadow) {
+			L.DomUtil.setPosition(this._shadow, pos);
+		}
+		if (this.options.iconAngle) {
+			this._icon.style.WebkitTransition = "all .15s linear";
+			this._icon.style.MozTransition = "all .15s linear";
+			this._icon.style.MsTransition = "all .15s linear";
+			this._icon.style.OTransition = "all .15s linear";
+			this._icon.style.WebkitTransform = this._icon.style.WebkitTransform + 'translate(0px, 12px)  rotate(' + this.options.iconAngle + 'deg)';
+			this._icon.style.MozTransform = 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
+			this._icon.style.MsTransform = 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
+			this._icon.style.OTransform = 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
+		}
+
+		this._icon.style.zIndex = pos.y + this.options.zIndexOffset;
+	},
 	setIconAngle: function(iconAngle) {
 		this.options.iconAngle = iconAngle || 0;
 		if (this._map) {
@@ -60,22 +87,104 @@ S.Marker = L.Marker.extend({
 		this._latlng = latlng;
 
 		this._reset();
-/*
-
 		if (this._popup) {
 			this._popup.setLatLng(latlng);
 		}
-*/
+
 	}
 });
+S.Popup = L.Popup.extend({
+	_initLayout: function () {
+		var prefix = 'strabo-popup',
+			container = this._container = L.DomUtil.create('div', prefix + ' ' + this.options.className + ' strabo-zoom-animated'),
+			closeButton;
+
+		if (this.options.closeButton) {
+			closeButton = this._closeButton = L.DomUtil.create('a', prefix + '-close-button', container);
+			closeButton.href = '#close';
+
+			L.DomEvent.addListener(closeButton, 'click', this._onCloseButtonClick, this);
+		}
+
+		var wrapper = this._wrapper = L.DomUtil.create('div', prefix + '-content-wrapper', container);
+		L.DomEvent.disableClickPropagation(wrapper);
+
+		this._contentNode = L.DomUtil.create('div', prefix + '-content', wrapper);
+		L.DomEvent.addListener(this._contentNode, 'mousewheel', L.DomEvent.stopPropagation);
+
+		this._tipContainer = L.DomUtil.create('div', prefix + '-tip-container', container);
+		this._tip = L.DomUtil.create('div', prefix + '-tip', this._tipContainer);
+	},
+
+	_update: function () {
+		if (!this._map) { return; }
+
+		this._container.style.visibility = 'hidden';
+
+		this._updateLayout();
+		this._updatePosition();
+
+		this._container.style.visibility = '';
+
+		this._adjustPan();
+	}
+});
+
+S.Marker.include({
+	openPopup: function () {
+		if (this._popup && this._map) {
+			this._popup.setLatLng(this._latlng);
+			this._map.openPopup(this._popup);
+		}
+
+		return this;
+	},
+
+	closePopup: function () {
+		if (this._popup) {
+			this._popup._close();
+		}
+		return this;
+	},
+
+	bindPopup: function (content, options) {
+		var anchor = this.options.icon.options.popupAnchor || new L.Point(0, 0);
+
+		if (options && options.offset) {
+			anchor = anchor.add(options.offset);
+		}
+
+		options = L.Util.extend({offset: anchor}, options);
+
+		if (!this._popup) {
+			this.on('click', this.openPopup, this);
+		}
+
+		this._popup = new S.Popup(options, this)
+			.setContent(content);
+
+		return this;
+	},
+
+	unbindPopup: function () {
+		if (this._popup) {
+			this._popup = null;
+			this.off('click', this.openPopup);
+		}
+		return this;
+	}
+});
+
+
 S.Ramble = function(map, rambleID, opts) {
+	this.fireEvent("constructed");
 	this._listeners = {};
 	// Constructor Error Handling
 	if (!map) {
-		console.error("Map parameter cannot be undefined.");
+		this.error("Map parameter cannot be undefined.");
 	}
 	if (!rambleID) {
-		console.error("rambleID parameter cannot be undefined.");
+		this.error("rambleID parameter cannot be undefined.");
 	}
 	this.id = rambleID;
 	this._options = opts;
@@ -102,8 +211,9 @@ S.Ramble = function(map, rambleID, opts) {
 	this.route = null;
 	// Talk to the Server to Retrieve Geo-Data
 	this.pull();
-}
+};
 S.Ramble.prototype.pull = function() {
+	this.fireEvent("geodatapull");
 	var r = this;
 	var xhr;
 	if (window.XMLHttpRequest) {
@@ -116,7 +226,6 @@ S.Ramble.prototype.pull = function() {
 			if (xhr.status === 200) {
 				var response = JSON.parse(xhr.responseText);
 				response = response.response;
-				console.log("Response:", response);
 				r.title = response.title;
 				r.latitude = parseFloat(response.latitude);
 				r.longitude = parseFloat(response.longitude);
@@ -131,46 +240,53 @@ S.Ramble.prototype.pull = function() {
 				r._latLngs = S.Util.pointsToLatLngs(r.points);
 				r.marker = new S.Marker(r.start);
 				r.marker.setIconAngle(Math.round((r.points[0].heading)));
-				r.map.addLayer(r.marker);
 				if (r._latLngs.length > 1) {
-					r.route = new L.Polyline(r._latLngs);
-					r.map.addLayer(r.route);
+					r.polyline = new L.Polyline(r._latLngs, {color:"#DB6C4D"});
 				}
+				r.show();
 				if (r.type == "video") {
 					r.initializeVideoPopup();
 					r.video.addEventListener('timeupdate', function() {
-						console.log("TimeUpdate");
 						r.updateMap();
+						r.fireEvent("timeupdate");
 					});
 					r.video.addEventListener("ended", function() {
-						console.log("Ended");
 						r.reset();
+						r.fireEvent("ended");
 					});
 					r.video.addEventListener("seeking", function() {
-						console.log("Seeking");
 						r.syncVideo();
+						r.fireEvent("seeking");
 					});
 					r.video.addEventListener("seeked", function() {
-						console.log("Seeked");
 						r.syncVideo();
+						r.fireEvent("seeked");
 					});
 					r.video.addEventListener("play", function() {
-						console.log('Playing');
+						r.fireEvent("play");
 					});
 					r.video.addEventListener("pause", function() {
-						console.log('Paused');
+						r.fireEvent("pause");
 					});
 				} else if (r.type == "photo") {
 					r.photo = new Image();
 				}
-				r.fireEvent('mapdraw');
+				r.fireEvent('geodatapulled');
 			} else {
-				console.log('There was a problem with the request.');
+				r.error('There was a problem with the request.');
 			}
 		}
-	}
+	};
 	xhr.open('GET', S.Config.MEDIA_URL + "/" + r.id + "/" + r.id + ".json");
 	xhr.send();
+};
+S.Ramble.prototype.show = function() {
+	if(this.polyline) this.map.addLayer(this.polyline);
+	this.map.addLayer(this.marker);				
+};
+S.Ramble.prototype.hide = function() {
+	if(this.polyline) this.map.removeLayer(this.polyline);
+	this.map.removeLayer(this.marker);	
 };
 S.Ramble.prototype.initializeVideoPopup = function() {
 	if (this.type == "video") {
@@ -182,14 +298,14 @@ S.Ramble.prototype.initializeVideoPopup = function() {
 		container.appendChild(videoTitle);
 		container.appendChild(this.video);
 		this.marker.bindPopup(container);
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype.updateMap = function() {
-	if (this.type == "video" && this.points != null) {
+	if (this.type == "video" && this.points) {
 		var pointTime;
 		var cTime = this.video.currentTime;
 		if (cTime > this.video.duration) { // If video is done.
-			console.log('wtf');
+			this.error('wtf');
 			this.currentPoint = 0;
 		} else {
 			if (this.currentPoint >= this.points.length) {
@@ -202,27 +318,26 @@ S.Ramble.prototype.updateMap = function() {
 			}
 			this.setCurrentPoint(this.currentPoint);
 		}
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype.syncVideo = function() {
 	if (this.video) {
 		this.getPointByTime(this.video.currentTime);
 		this.setCurrentPoint(this.currentPoint);
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
-}
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
+};
 S.Ramble.prototype.reset = function() {
 	if (this.video) {
 		this.setCurrentTime(0);
-	} else console.error(S.Util.ERROR_NOT_VIDEO)
-}
+		this.fireEvent("reset");
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
+};
 S.Ramble.prototype.getPointByTime = function(timestamp, head, tail) {
 	head = head || 0;
 	tail = tail || this.points.length;
-	var midpoint = parseInt((tail + head) / 2);
+	var midpoint = parseInt((tail + head) / 2,10);
 	var length = tail - head;
-	if (length <= 1) {
-		this.currentPoint = midpoint;
-	} else if (timestamp == this.points[midpoint].timestamp) {
+	if (length <= 1 || timestamp == this.points[midpoint].timestamp) {
 		this.currentPoint = midpoint;
 	} else if (timestamp > this.points[midpoint].timestamp) {
 		this.getPointByTime(timestamp, midpoint, tail);
@@ -243,28 +358,27 @@ S.Ramble.prototype.setCurrentPoint = function(currentPoint) {
 		this.marker.setIconAngle(currentAngle + delta);
 		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].latitude, this.points[this.currentPoint].longitude));
 
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype.setCurrentTime = function(newTime) {
 	if (this.video) {
 		this.video.currentTime = 0;
 		this.getPointByTime(newTime);
 		this.setCurrentPoint(this.currentPoint);
-	}
-	console.error(S.Util.ERROR_NOT_VIDEO);
-}
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
+};
 S.Ramble.prototype.closeTrack = function() {};
 S.Ramble.prototype.loadTrack = function() {};
-/*
+
 S.Ramble.prototype.play = function() {
 	if (this.video) {
 		this.video.play();
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype.pause = function() {
 	if (this.video) {
 		this.video.pause();
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this.error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype.playPause = function() {
 	if (this.video) {
@@ -275,7 +389,6 @@ S.Ramble.prototype.playPause = function() {
 		}
 	} else console.error(S.Util.ERROR_NOT_VIDEO);
 };
-*/
 S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	var events = this._events = this._events || {};
 	events[type] = events[type] || [];
@@ -285,10 +398,12 @@ S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	});
 	return this;
 };
+
 S.Ramble.prototype.hasEventListeners = function(type) {
 	var k = '_events';
 	return (k in this) && (type in this[k]) && (this[k][type].length > 0);
 };
+
 S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -301,6 +416,7 @@ S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	}
 	return this;
 };
+
 S.Ramble.prototype.fireEvent = function(type, data) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -314,4 +430,8 @@ S.Ramble.prototype.fireEvent = function(type, data) {
 		listeners[i].action.call(listeners[i].context || this, event);
 	}
 	return this;
+};
+S.Ramble.prototype.error = function(parameter) {
+	this.fireEvent(parameter, {"text":parameter});
+	if(console) console.error(parameter);
 };
