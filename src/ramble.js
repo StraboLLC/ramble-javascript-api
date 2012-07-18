@@ -1,8 +1,11 @@
 "use strict";
 var S = {};
 S.Config = {
-	SITE_BASE_URL: "http://api.strabo.co/",
-	MEDIA_URL: "http://api.strabo.co/data"
+/* 	SITE_BASE_URL: "http://api.strabo.co/", */
+/* 	MEDIA_URL: "http://api.strabo.co/data" */
+	SITE_BASE_URL: "http://localhost:8000/",
+	MEDIA_URL: "http://localhost:8000/data"
+	
 };
 S.Util = {
 	pointsToLatLngs: function(points) {
