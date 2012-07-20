@@ -45,6 +45,21 @@
 			text-align: center;
 			font-size: 18px;
 		}
+		ul.description  {
+			margin:0;
+			padding:0;
+			list-style:none;
+		}
+		ul.description li {
+			list-style:none;
+			display: inline-block;
+			margin:0;
+			padding:0px 10px;
+			border-left: 1pt solid #333;
+		}
+		ul.description li:first-child {
+			border:0;
+		}
 		.large-description {
 			text-align: center;
 			font-size: 22px;
@@ -59,7 +74,11 @@
 <body>
 	<div id="main-logo">Ramble</div>
 	<p class="large-description">by Strabo</p>
-	<p class="description">Client-Side API</p>
-	<p class="description"><a href="examples/">View Examples</a></p>
+	<h3 class="description">Client-Side API</h3>
+		<ul class="description">
+		<li><a href="examples/">Examples</a></li><li><a href="docs/">Docs</a></li><li><a href="#source">Source</a></li><li><a href="LICENSE.txt">License</a></li>
+		</ul>
+	<h3 class="description">Mobile API Site</h3>
+	<p class="description"><a href="http://mobile.strabo.co/">View Examples</a></p>
 </body>
 </html>
