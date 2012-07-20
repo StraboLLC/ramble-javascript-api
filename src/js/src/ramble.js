@@ -1,11 +1,16 @@
 "use strict";
 /**
  * An instance for a Ramble Video
+ * Example:   
+ *     var ramble = new S.Ramble(new L.Map(...), "UNIQUE_ID");
+ *     
  * @param {L.Map} 	map      The L.Map to draw the S.Ramble on.
  * @param {String} 	rambleID The unique token of the ramble video to request from the server.
  * @param {Object} 	opts     An object of miscellaneous options to initialize the S.Ramble with.
+ * 
+ * @constructor
+ * Creates a new instance of a S.Ramble
  */
-
 S.Ramble = function(map, rambleID, opts) {
 	/**
 	 * @event constructed
@@ -48,9 +53,6 @@ S.Ramble = function(map, rambleID, opts) {
 	// Talk to the Server to Retrieve Geo-Data
 	this._pull();
 };
-/**
- * Handles Asynchronous Initialization for the Video (Downloading Geo data as well as map init stuff.)
- */
 S.Ramble.prototype._pull = function() {
 	/**
 	 * @event geodatapull
@@ -71,10 +73,6 @@ S.Ramble.prototype._pull = function() {
 	document.body.appendChild(myscript);
 	// S.currentRamble._processResponse(S.currentResponse);
 };
-/**
- * Processes the json response element that comes back from the server.
- * @param  {Object} response The response that comes from the server.
- */
 S.Ramble.prototype._processResponse = function(response) {
 	var r = this;
 	//response = response.response;
@@ -91,8 +89,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	r.start = new L.LatLng(r.latitude, r.longitude);
 	r._latLngs = S.Util.pointsToLatLngs(r.points);
 	r.marker = new S.Marker(r.start);
-	console.log(r.start);
-	r.marker.setIconAngle(Math.round((r.points[0].heading)));
+	r.marker.setIconAngle(Math.round((r.heading)));
 	if (r._latLngs.length > 1) {
 		r.polyline = new L.Polyline(r._latLngs, {
 			color: "#DB6C4D"
@@ -100,7 +97,6 @@ S.Ramble.prototype._processResponse = function(response) {
 	}
 	r.show();
 	if (r.type == "video") {
-		console.log("video popup");
 		r._initializeVideoPopup();
 		r.video.addEventListener('timeupdate', function() {
 			r._updateMap();
@@ -148,8 +144,8 @@ S.Ramble.prototype._processResponse = function(response) {
 			 */
 			r.fireEvent("pause");
 		});
-	} else if (r.type == "photo") {
-		r.photo = new Image();
+	} else if (r.type == "image") {
+		r._initializePhotoPopup();
 	}
 	/**
 	 * @event geodatapulled
@@ -158,6 +154,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	r.fireEvent('geodatapulled');
 }
 /**
+ * @method show
  * Shows the S.Ramble on the map.
  */
 S.Ramble.prototype.show = function() {
@@ -165,6 +162,7 @@ S.Ramble.prototype.show = function() {
 	this.map.addLayer(this.marker);
 };
 /**
+ * @method hide
  * Hides the S.Ramble on the map.
  */
 S.Ramble.prototype.hide = function() {
@@ -184,7 +182,19 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		this.marker.bindPopup(container);
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
+S.Ramble.prototype._initializePhotoPopup = function() {
+	if(this.type == "image") {
+		var container = document.createElement('div');
+		var photoTitle = document.createElement('div');
+		photoTitle.setAttribute('class', 'photo-popup-title');
+		photoTitle.innerHTML = this.title;
+		this.photo = S.Util.createPhoto(this.token);
+		this.photo.style.width = (this.MAP_WIDTH/4)+"px";
+		container.appendChild(photoTitle);
+		container.appendChild(this.photo);
+		this.marker.bindPopup(container);		
+	} else this._error(S.Util.ERROR_NOT_PHOTO);
+}
 S.Ramble.prototype._updateMap = function() {
 	if (this.type == "video" && this.points) {
 		var pointTime;
@@ -206,6 +216,7 @@ S.Ramble.prototype._updateMap = function() {
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 /**
+ * @method syncVideo
  * Synchronizes the marker with current video time.
  */
 S.Ramble.prototype.syncVideo = function() {
@@ -215,6 +226,7 @@ S.Ramble.prototype.syncVideo = function() {
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 /**
+ * @method reset
  * Sets the video to its initial state.
  */
 S.Ramble.prototype.reset = function() {
@@ -250,7 +262,7 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 			delta -= 360;
 		}
 		this.marker.setIconAngle(currentAngle + delta);
-		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].latitude, this.points[this.currentPoint].longitude));
+		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].coords[0], this.points[this.currentPoint].coords[1]));
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 /**
@@ -259,7 +271,7 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
  */
 S.Ramble.prototype.setCurrentTime = function(newTime) {
 	if (this.video) {
-		if (newTime < 0 || newTime >= video.duration) this._error("Suggested time is out of bounds.");
+		if (newTime < 0 || newTime >= this.video.duration) this._error("Suggested time is out of bounds.");
 		this.video.currentTime = 0;
 		this._getPointByTime(newTime);
 		this._setCurrentPoint(this.currentPoint);
@@ -291,7 +303,7 @@ S.Ramble.prototype.playPause = function() {
 		} else {
 			this.pause();
 		}
-	} else console.error(S.Util.ERROR_NOT_VIDEO);
+	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 /**
  * Adds a specific event listener to the S.Ramble.
@@ -356,10 +368,6 @@ S.Ramble.prototype.fireEvent = function(type, data) {
 	}
 	return this;
 };
-/**
- * Logs error messages to the console as well as fires a specific ramble error listener.
- * @param  {String} parameter The text of the error message to pass to the console.
- */
 S.Ramble.prototype._error = function(parameter) {
 	var msg = "Ramble-" + this.id + ": " + parameter;
 	this.fireEvent("error", {

@@ -1,11 +1,12 @@
 rm -rf docs/
 jsduck --builtin-classes --output docs/ \
 		src/js/ramble.js \
-		src/js/src/config.js \
-		src/js/src/marker.js \
-		src/js/src/popup.js \
-		src/js/src/ramble.js \
-		src/js/src/util.js \
-		src/js/libs/leaflet/leaflet-src.js
+		src/js/src/ \
 
+
+
+# jsdoc -d=./docs \
+# 		src/js/ramble.js \
+# 		src/js/src/ \
+# 		src/js/libs/leaflet/leaflet-src.js
 

@@ -1,7 +1,8 @@
 "use strict";
 /**
+ * @class S
  * Global Namespace for all Strabo Ramble related API Functions.
- * @type {Object}
+ * Requires [Leaflet](http://leaflet.cloudmade.com) Library
  */
 var S = {
 	currentResponse:null,

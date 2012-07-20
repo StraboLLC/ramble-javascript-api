@@ -16,7 +16,7 @@
 
 
 	<script>
-		var t, map;
+		var list, map;
 		$(document).ready(function() {
 			map = new L.Map('map', {});
 			map.setView(new L.LatLng(43.62439567002734,-72.5178337097168),13);
@@ -36,7 +36,8 @@
 			map.addControl(layersControl);
 
 			S.Config.MEDIA_URL = "http://ns.data.api.strabo.co.s3-website-us-east-1.amazonaws.com";
-			t = new S.Ramble(map,"3f96474a8a03ebc48f402b43d150a9fa");
+			var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"];
+			list = new S.RambleList(map,tokens);
 			
 /* 			t = new S.Ramble(map,"fbf7ddb41122727a05725ddc5ef28498"); */
 		});

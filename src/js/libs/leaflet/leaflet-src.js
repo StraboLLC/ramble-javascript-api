@@ -5,6 +5,10 @@
 */
 (function () {
 
+/**
+ * @class L
+ * For more information visit the [Leaflet Documentation](http://leaflet.cloudmade.com/reference.html).
+ */
 var L, originalL;
 
 if (typeof exports !== 'undefined') {
@@ -26,11 +30,13 @@ L.version = '0.4';
 
 
 /**
+ * @class L.Util
+ * @static
  * L.Util is a namespace for various utility functions.
  */
 
 L.Util = {
-	extend: function (/**Object*/ dest) /**-> Object*/ {	// merge src properties into dest
+	extend: function (/**Object*/ dest) {	// merge src properties into dest
 		var sources = Array.prototype.slice.call(arguments, 1);
 		for (var j = 0, len = sources.length, src; j < len; j++) {
 			src = sources[j] || {};
@@ -954,6 +960,22 @@ L.CRS.EPSG4326 = L.Util.extend({}, L.CRS, {
 
 /**
  * L.Map is the central class of the API - it is used to create a map.
+ *
+ * Example:
+ *     
+ *     // initialize the map on the "map" div with a given center and zoom
+ *     var map = new L.Map('map', {
+ *         center: new L.LatLng(51.505, -0.09),
+ *         zoom: 13
+ *     });
+ *     
+ *     // create a CloudMade tile layer
+ *     var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/YOUR-API-KEY/997/256/{z}/{x}/{y}.png',
+ *         cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18});
+ *     
+ *     // add the CloudMade layer to the map
+ *     map.addLayer(cloudmade);
+ *     
  */
 
 L.Map = L.Class.extend({
@@ -962,7 +984,7 @@ L.Map = L.Class.extend({
 	options: {
 		crs: L.CRS.EPSG3857,
 
-		/**
+		/*
 		center: LatLng,
 		zoom: Number,
 		layers: Array,
@@ -2471,7 +2493,6 @@ L.Marker = L.Class.extend({
 
 		this._setPos(pos);
 	},
-
 	_initInteraction: function () {
 		if (!this.options.clickable) {
 			return;
@@ -2495,7 +2516,6 @@ L.Marker = L.Class.extend({
 			}
 		}
 	},
-
 	_onMouseClick: function (e) {
 		L.DomEvent.stopPropagation(e);
 		if (this.dragging && this.dragging.moved()) { return; }
@@ -2530,7 +2550,7 @@ L.Marker = L.Class.extend({
 L.DivIcon = L.Icon.extend({
 	options: {
 		iconSize: new L.Point(12, 12), // also can be set through CSS
-		/**
+		/*
 		iconAnchor: (Point)
 		popupAnchor: (Point)
 		*/
@@ -2774,7 +2794,7 @@ L.Popup = L.Class.extend({
 });
 
 
-/**
+/*
  * Popup extension to L.Marker, adding openPopup & bindPopup methods.
  */
 

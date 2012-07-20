@@ -1,9 +1,17 @@
-.video-popup-title {
+.video-popup-title, .photo-popup-title {
 	font-family:sans-serif;
 	font-size:20px;
 	text-align:center;
+	padding-left:20px;
+	background-repeat:no-repeat;
+	background-position:left center;
 }
-
+.video-popup-title {
+	background-image:url('images/video.png');
+}
+.photo-popup-title {
+	background-image:url('images/image.png');
+}
 .strabo-popup-pane {
 	position:absolute;
 }

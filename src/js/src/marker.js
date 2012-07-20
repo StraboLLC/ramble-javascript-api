@@ -3,6 +3,14 @@
  * @class S.Marker
  * @extends L.Marker
  * A custom Marker for use with the Leaflet Maps that supports rotation.
+ * Usage Example:
+ *     var marker = new S.Marker(new L.LatLng(...));
+ *     map.addLayer(marker);
+ *
+ * @constructor
+ * Creates a new instance of a S.Marker
+ * @param {L.LatLng} latlng A Latitude and Longtiude to initialize the marker at.
+ * @param {Object} options An object filled with options for the Marker.
  */
 S.Marker = L.Marker.extend({
 	_setAngle: function() {
@@ -39,6 +47,7 @@ S.Marker = L.Marker.extend({
 		this._setPos(pos);
 	},
 	/**
+	 * @method setIconAngle
 	 * Sets the rotation for the S.Marker
 	 * @param {Number} iconAngle Amount to rotate the S.Marker in degrees.
 	 */
@@ -49,6 +58,7 @@ S.Marker = L.Marker.extend({
 		}
 	},
 	/**
+	 * @method getIconAngle
 	 * Gets the rotation for the S.Marker
 	 * @return {Number} Amount of rotation in the S.Marker in degrees.
 	 */
@@ -56,6 +66,7 @@ S.Marker = L.Marker.extend({
 		return this.options.iconAngle || 0;
 	},
 	/**
+	 * @method setLatLng
 	 * Sets the L.LatLng for the marker. Used to move a S.Marker across the map.
 	 * @param {L.LatLng} latlng An L.LatLng containing the latitude and longitude of the S.Marker's destination.
 	 */
@@ -66,4 +77,10 @@ S.Marker = L.Marker.extend({
 			this._popup.setLatLng(latlng);
 		}
 	}
+	/**
+	 * @method bindPopup
+	 * Binds a popup with a particular HTML content to a click on this marker. You can also open the bound popup with the Marker openPopup method.
+	 * @param {String | HTMLElement} content The content for the popup.
+	 * @param {Object} options A set of options for a popup. See [here](http://leaflet.cloudmade.com/reference.html#popup-options) for more information. 
+	 */
 });
