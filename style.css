@@ -1,12 +1,13 @@
 html {
-	height: 100%;
 	width: 100%;
+	min-height: 100%;
 	margin:0;
 	padding:0;			
 }
 body {
 	font-family: 'PT Sans', sans-serif;
 	width: 100%;
+	height: auto;
 	margin:0;
 	padding:0;
 	background-image: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #bbbbbb 100%); /* FF3.6+ */
@@ -26,6 +27,37 @@ a:visited {
 a:hover {
 	color:rgba(20,64,105,1);
 }
+table {
+	border-collapse: collapse;
+}
+tr {
+	
+}
+td, th {
+	border:1pt solid #aaa;
+	padding:4px;
+	margin:0;
+}
+th {
+	background:#eee;
+}
+th:nth-child(1),
+th:nth-child(2) {
+	width:150px;
+}
+pre code {
+	overflow-x: scroll;
+}
+td {
+	
+}
+td ul {
+	margin:0;
+	padding:0;
+}
+td ul li {
+	list-style: none;
+}
 .container {
 	margin:0 auto;
 	width:900px;
@@ -42,10 +74,13 @@ a:hover {
 }
 #main-header .main-logo {
 	font-size: 50px;
-	text-shadow: 1px 1px 1px white;
 	color: rgb(209,93,36);
 	margin:0px;
 	padding:0px;
+}
+#main-header .main-logo a {
+	color: rgb(209,93,36);
+	text-decoration: none;
 }
 #main-header .main-tagline {
 	margin:-10px 0 0 5px;
@@ -77,4 +112,12 @@ ul.description li:first-child {
 ::selection, ::-moz-selection {
 	background: rgb(37,115,186);
 	color: #fff;
+}
+footer {
+	padding:20px 0;
+	width:900px;
+	margin:0 auto;
+	border-top:1pt solid #333;
+	font-size: 12px;
+	text-align: center;
 }

@@ -115,7 +115,7 @@ S.Ramble.prototype._processResponse = function(response) {
 			r.fireEvent("ended");
 		});
 		r.video.addEventListener("seeking", function() {
-			r.syncVideo();
+			r._syncVideo();
 			/**
 			 * @event seeking
 			 * Fired when seeking for a position in the video.
@@ -123,7 +123,7 @@ S.Ramble.prototype._processResponse = function(response) {
 			r.fireEvent("seeking");
 		});
 		r.video.addEventListener("seeked", function() {
-			r.syncVideo();
+			r._syncVideo();
 			/**
 			 * @event seeked
 			 * Fired when a position has been seeked to in the video.
@@ -216,10 +216,10 @@ S.Ramble.prototype._updateMap = function() {
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 /**
- * @method syncVideo
+ * @method _syncVideo
  * Synchronizes the marker with current video time.
  */
-S.Ramble.prototype.syncVideo = function() {
+S.Ramble.prototype._syncVideo = function() {
 	if (this.video) {
 		this._getPointByTime(this.video.currentTime);
 		this._setCurrentPoint(this.currentPoint);
@@ -231,7 +231,7 @@ S.Ramble.prototype.syncVideo = function() {
  */
 S.Ramble.prototype.reset = function() {
 	if (this.video) {
-		this.setCurrentTime(0);
+		this.setTime(0);
 		/**
 		 * @event reset
 		 * Fired when the video playback is reset to zero.
@@ -265,17 +265,26 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].coords[0], this.points[this.currentPoint].coords[1]));
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
+S.Ramble.prototype.getTime = function() {
+	if (this.video) {
+		return this.video.currentTime;
+	} else this._error(S.Util.ERROR_NOT_VIDEO);
+};
 /**
  * Sets the video time to a certain time.
  * @param {Number} newTime The number of seconds into the video to set the playback position.
  */
-S.Ramble.prototype.setCurrentTime = function(newTime) {
+S.Ramble.prototype.setTime = function(newTime) {
 	if (this.video) {
 		if (newTime < 0 || newTime >= this.video.duration) this._error("Suggested time is out of bounds.");
 		this.video.currentTime = 0;
 		this._getPointByTime(newTime);
 		this._setCurrentPoint(this.currentPoint);
+		return this;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
+};
+S.Ramble.prototype.getLatLng = function() {
+	return this.start;
 };
 /**
  * Plays the video.
@@ -347,6 +356,9 @@ S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 		}
 	}
 	return this;
+};
+S.Ramble.prototype.getType = function() {
+	return this.type;
 };
 /**
  * Method used to fire a specific event.
