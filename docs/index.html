@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Ramble API</title>
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+	<link href="/style.css" rel="stylesheet" type="text/css">
+	
+	<link rel="stylesheet" href="http://yandex.st/highlightjs/7.0/styles/monokai.min.css">
+	<script src="http://yandex.st/highlightjs/7.0/highlight.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<header id="main-header">
+			<div class="main-logo">Ramble</div>
+			<div class="main-tagline">by Strabo</div>
+		</header>
+		<article>
+			<h1>Ramble API Documentation</h1>
+			<p>The Ramble API, created by Strabo, with the end use case of NatureShare integration consists of an iOS video recorder module, 
+			a server-side video encoding and storage as well as a JavaScript client-side library for viewing Ramble videos in browser.</p>
+			<p>The server-side component, written in Ruby on Rails, is designed to be as modular as possible. The server receives uploads 
+			from the iOS application in the form of a POST request. The server then sends these videos to Panda Encoding through Amazon S3. 
+			After the Panda API finishes transcoding the videos, they are stored permanently on a S3 Bucket, where the videos and the 
+			geographic information may be server back to the client-side viewer.</p>
+			<p>The client-side component, written in the form of a JavaScript library using several HTML5 APIs manages playback of the Ramble 
+			videos. This library requires Leaflet maps for playback. Applications using the Ramble web player should be written in JavaScript 
+			and can leverage the methods defined in the public API.</p>
+			
+			<h2>Implement the JavaScript API</h2>
+			<p>Include the Ramble JavaScript API using the following line of Code.</p>
+			<pre><code class="html">&lt;script src="http://api.strabo.co/build/ramble.min.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
+			
+			
+			<p>Initialize Leaflet Maps. A simple Leaflet map instance can be generated below. For more information, see the <a href="http://leaflet.cloudmade.com/">
+			Leaflet website and API</a>. Note, the Ramble JavaScript API does not include the Leaflet API.
+			</p>
+			<pre><code class="javascript">// initialize the map on the "map" div
+var map = new L.Map('map');
+
+// create a CloudMade tile layer with style #997 (or use other provider of your choice)
+var cloudmade = new L.TileLayer('http://{s}.tile.cloudmade.com/<a href="http://cloudmade.com/register">[API-key]</a>/997/256/{z}/{x}/{y}.png', {
+	attribution: 'Map data &amp;copy; <span class="text-cut" data-cut="[&hellip;]">&lt;a href="http://openstreetmap.org"&gt;OpenStreetMap&lt;/a&gt; contributors, &lt;a href="http://creativecommons.org/licenses/by-sa/2.0/"&gt;CC-BY-SA&lt;/a&gt;, Imagery &copy; &lt;a href="http://cloudmade.com"&gt;CloudMade&lt;/a&gt;</span>',
+	maxZoom: 18
+});
+
+// add the layer to the map, set the view to a given place and zoom
+map.addLayer(cloudmade).setView(new L.LatLng(51.505, -0.09), 13);
+
+// create a marker in the given location and add it to the map
+var marker = new L.Marker(new L.LatLng(51.5, -0.09));
+map.addLayer(marker);
+
+// attach a given HTML content to the marker and immediately open it
+marker.bindPopup("A pretty CSS3 popup.&lt;br /&gt;Easily customizable.").openPopup();</code></pre>
+
+			<p>Using a list of tokens supplied from your server, initialize the Ramble videos.</p>
+			<pre><code class="javascript">var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"];
+list = new S.RambleList(map,tokens);</code></pre>
+
+
+			<p>Once initialized, Ramble Videos can be manipulated using the API below.</p>
+		</article>
+	</div>
+	<script type="text/javascript">
+		hljs.tabReplace = '    ';
+		hljs.initHighlightingOnLoad();
+	</script>
+</body>
+</html>
