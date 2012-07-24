@@ -1,10 +1,5 @@
 "use strict";
-/**
- * @class S.Popup
- * @extends L.Popup
- * @type {S.Popup}
- * A class to attach HTML to a S.Marker
- */
+
 S.Popup = L.Popup.extend({
 	connected:true,
 	_initLayout: function() {

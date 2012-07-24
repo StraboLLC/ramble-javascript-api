@@ -1,21 +1,6 @@
 "use strict";
-/**
- * An instance for a Ramble Video
- * Example:   
- *     var ramble = new S.Ramble(new L.Map(...), "UNIQUE_ID");
- *     
- * @param {L.Map} 	map      The L.Map to draw the S.Ramble on.
- * @param {String} 	rambleID The unique token of the ramble video to request from the server.
- * @param {Object} 	opts     An object of miscellaneous options to initialize the S.Ramble with.
- * 
- * @constructor
- * Creates a new instance of a S.Ramble
- */
+
 S.Ramble = function(map, rambleID, opts) {
-	/**
-	 * @event constructed
-	 * Fired when a new S.Ramble is initialized
-	 */
 	this.fireEvent("constructed", {
 		map: map,
 		id: rambleID
@@ -53,26 +38,18 @@ S.Ramble = function(map, rambleID, opts) {
 	// Talk to the Server to Retrieve Geo-Data
 	this._pull();
 };
+
 S.Ramble.prototype._pull = function() {
-	/**
-	 * @event geodatapull
-	 * Fired when a S.Ramble starts to pull geodata from the server.
-	 */
 	this.fireEvent("geodatapull");
 
-	// $.ajax({
-	// 	url: S.Config.MEDIA_URL + "/" + this.id + "/" + this.id + ".js",
-	// 	context: this,
-	// 	dataType: "jsonp"
-	// }).done(function(response){
-	// 	this._processResponse(S.currentResponse);
-	// });
-	S.currentRamble=this;
+	//Process Response Through JSONP Method
+	S.rambles[this.id] = this;
 	var myscript = document.createElement('script');
 	myscript.setAttribute('src', S.Config.MEDIA_URL + "/" + this.id + "/" + this.id + ".js");
 	document.body.appendChild(myscript);
-	// S.currentRamble._processResponse(S.currentResponse);
+
 };
+
 S.Ramble.prototype._processResponse = function(response) {
 	var r = this;
 	//response = response.response;
@@ -88,6 +65,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	r.type = response.media_type;
 	r.start = new L.LatLng(r.latitude, r.longitude);
 	r._latLngs = S.Util.pointsToLatLngs(r.points);
+	r._icon = new S.Icon();
 	r.marker = new S.Marker(r.start);
 	r.marker.setIconAngle(Math.round((r.heading)));
 	if (r._latLngs.length > 1) {
@@ -95,80 +73,48 @@ S.Ramble.prototype._processResponse = function(response) {
 			color: "#DB6C4D"
 		});
 	}
+
 	r.show();
 	if (r.type == "video") {
 		r._initializeVideoPopup();
 		r.video.addEventListener('timeupdate', function() {
 			r._updateMap();
-			/**
-			 * @event timeupdate
-			 * Fired when the video changes its time.
-			 */
 			r.fireEvent("timeupdate");
 		});
 		r.video.addEventListener("ended", function() {
 			r.reset();
-			/**
-			 * @event ended
-			 * Fired when the video ends.
-			 */
 			r.fireEvent("ended");
 		});
 		r.video.addEventListener("seeking", function() {
 			r._syncVideo();
-			/**
-			 * @event seeking
-			 * Fired when seeking for a position in the video.
-			 */
 			r.fireEvent("seeking");
 		});
 		r.video.addEventListener("seeked", function() {
 			r._syncVideo();
-			/**
-			 * @event seeked
-			 * Fired when a position has been seeked to in the video.
-			 */
 			r.fireEvent("seeked");
 		});
 		r.video.addEventListener("play", function() {
-			/**
-			 * @event play
-			 * Fired the video starts playing.
-			 */
 			r.fireEvent("play");
 		});
 		r.video.addEventListener("pause", function() {
-			/**
-			 * @event pause
-			 * Fired when the video is paused.
-			 */
 			r.fireEvent("pause");
 		});
 	} else if (r.type == "image") {
 		r._initializePhotoPopup();
 	}
-	/**
-	 * @event geodatapulled
-	 * Fired when the geodata has been pulled and processed successfully from the server.
-	 */
 	r.fireEvent('geodatapulled');
 }
-/**
- * @method show
- * Shows the S.Ramble on the map.
- */
+
 S.Ramble.prototype.show = function() {
 	if (this.polyline) this.map.addLayer(this.polyline);
 	this.map.addLayer(this.marker);
 };
-/**
- * @method hide
- * Hides the S.Ramble on the map.
- */
+
 S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
 	this.map.removeLayer(this.marker);
 };
+
 S.Ramble.prototype._initializeVideoPopup = function() {
 	if (this.type == "video") {
 		var container = document.createElement('div');
@@ -182,6 +128,7 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		this.marker.bindPopup(container);
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
+
 S.Ramble.prototype._initializePhotoPopup = function() {
 	if(this.type == "image") {
 		var container = document.createElement('div');
@@ -195,6 +142,7 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		this.marker.bindPopup(container);		
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 }
+
 S.Ramble.prototype._updateMap = function() {
 	if (this.type == "video" && this.points) {
 		var pointTime;
@@ -215,30 +163,21 @@ S.Ramble.prototype._updateMap = function() {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * @method _syncVideo
- * Synchronizes the marker with current video time.
- */
+
 S.Ramble.prototype._syncVideo = function() {
 	if (this.video) {
 		this._getPointByTime(this.video.currentTime);
 		this._setCurrentPoint(this.currentPoint);
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * @method reset
- * Sets the video to its initial state.
- */
+
 S.Ramble.prototype.reset = function() {
 	if (this.video) {
 		this.setTime(0);
-		/**
-		 * @event reset
-		 * Fired when the video playback is reset to zero.
-		 */
 		this.fireEvent("reset");
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
+
 S.Ramble.prototype._getPointByTime = function(timestamp, head, tail) {
 	head = head || 0;
 	tail = tail || this.points.length;
@@ -252,6 +191,7 @@ S.Ramble.prototype._getPointByTime = function(timestamp, head, tail) {
 		this._getPointByTime(timestamp, head, midpoint);
 	}
 };
+
 S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 	if (this.video && this.marker) {
 		this.currentPoint = currentPoint;
@@ -265,15 +205,13 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].coords[0], this.points[this.currentPoint].coords[1]));
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
+
 S.Ramble.prototype.getTime = function() {
 	if (this.video) {
 		return this.video.currentTime;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * Sets the video time to a certain time.
- * @param {Number} newTime The number of seconds into the video to set the playback position.
- */
+
 S.Ramble.prototype.setTime = function(newTime) {
 	if (this.video) {
 		if (newTime < 0 || newTime >= this.video.duration) this._error("Suggested time is out of bounds.");
@@ -283,28 +221,23 @@ S.Ramble.prototype.setTime = function(newTime) {
 		return this;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
+
 S.Ramble.prototype.getLatLng = function() {
 	return this.start;
 };
-/**
- * Plays the video.
- */
+
 S.Ramble.prototype.play = function() {
 	if (this.video) {
 		this.video.play();
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * Pauses the video.
- */
+
 S.Ramble.prototype.pause = function() {
 	if (this.video) {
 		this.video.pause();
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * Toggles between playing and paused.
- */
+
 S.Ramble.prototype.playPause = function() {
 	if (this.video) {
 		if (this.video.paused) {
@@ -314,12 +247,7 @@ S.Ramble.prototype.playPause = function() {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-/**
- * Adds a specific event listener to the S.Ramble.
- * @param {String}   type    The specific event to listen for.
- * @param {Function} fn      The callback method.
- * @param {Object}   context The context for the callback method.
- */
+
 S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	var events = this._events = this._events || {};
 	events[type] = events[type] || [];
@@ -329,22 +257,12 @@ S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	});
 	return this;
 };
-/**
- * Checks for a specific event listener.
- * @param  {String}  type The name of the specific event to check for.
- * @return {Boolean}      Returns true if the event was found, else false.
- */
+
 S.Ramble.prototype.hasEventListeners = function(type) {
 	var k = '_events';
 	return (k in this) && (type in this[k]) && (this[k][type].length > 0);
 };
-/**
- * Removes a specific event listener from the S.Ramble.
- * @param  {String}   type    The name of the event.
- * @param  {Function} fn      The callback method.
- * @param  {Object}   context The scope of the callback method.
- * @return {Object}           Returns the instance of the S.Ramble that is being called.
- */
+
 S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -357,15 +275,11 @@ S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	}
 	return this;
 };
+
 S.Ramble.prototype.getType = function() {
 	return this.type;
 };
-/**
- * Method used to fire a specific event.
- * @param  {String} type Name of the event to trigger.
- * @param  {Object} data Data to pass to the callback method.
- * @return {S.Ramble}      Returns the instance of the S.Ramble that is being called.
- */
+
 S.Ramble.prototype.fireEvent = function(type, data) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -380,6 +294,7 @@ S.Ramble.prototype.fireEvent = function(type, data) {
 	}
 	return this;
 };
+
 S.Ramble.prototype._error = function(parameter) {
 	var msg = "Ramble-" + this.id + ": " + parameter;
 	this.fireEvent("error", {

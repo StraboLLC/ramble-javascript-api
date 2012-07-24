@@ -1,20 +1,14 @@
 "use strict";
-/**
- * @class S
- * Global Namespace for all Strabo Ramble related API Functions.
- * Requires [Leaflet](http://leaflet.cloudmade.com) Library
- */
+
 var S = {
+	rambles:[],
 	currentResponse:null,
 	currentRamble:null,
 	setCurrentResponse:function(response) {
 		this.currentResponse=response;
 	}
 };
-/**
- * Namespace for Important Constants
- * @type {Object}
- */
+
 S.Config = {
 	SITE_BASE_URL: "/",
 	MEDIA_URL: "/data" 

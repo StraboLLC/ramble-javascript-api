@@ -1,14 +1,7 @@
 "use strict";
-/**
- * Namespace for static utility methods.
- * @type {Object}
- */
+
 S.Util = {
-	/**
-	 * @method pointsToLatLngs
-	 * @param  {Array} points 	An array of point objects that come from the server.
-	 * @return {Array}        	An array of L.LatLng objects.
-	 */
+
 	pointsToLatLngs: function(points) {
 		var results = [];
 		for (var x in points) {
@@ -16,11 +9,7 @@ S.Util = {
 		}
 		return results;
 	},
-	/**
-	 * Returns an appropriate media URL based on values in S.Config.
-	 * @param  {String} token A unique identifier token.
-	 * @return {String}       A mediaURL minus the file extension for the media.
-	 */
+
 	mediaURL: function(token) {
 		return S.Config.MEDIA_URL + "/" + token + "/" + token;
 	},
