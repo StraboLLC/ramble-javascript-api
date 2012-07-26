@@ -34,7 +34,7 @@
 			<pre><code class="html">&lt;script src="http://api.strabo.co/build/ramble.min.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
 			
 			
-			<p>Initialize Leaflet Maps. A simple Leaflet map instance can be generated below. For more information, see the <a href="http://leaflet.cloudmade.com/">
+			<p>Initialize Leaflet Maps. A simple Leaflet map instance can be generated below. For more information, see the <a target="_blank" href="http://leaflet.cloudmade.com/">
 			Leaflet website and API</a>. Note, the Ramble JavaScript API does not include the Leaflet API.
 			</p>
 			<pre><code class="javascript">// initialize the map on the "map" div
@@ -76,9 +76,9 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>new S.RambleList</code></td>
 					<td><code><ul>
-						<li>&lt;L.Map&gt; map</li>
-						<li>&lt;Array&gt; ids</li>
-						<li>&lt;RambleList Options&gt; options</li>
+						<li>&lt;<a target="_blank" href="http://leaflet.cloudmade.com/reference.html#map">L.Map</a>&gt; map</li>
+						<li>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/">Array</a>&gt; ids</li>
+						<li>&lt;<a href="#ramblelist_options">RambleList Options</a>&gt; options</li>
 					</ul></code></td>
 					<td>Creates a new <a href="#ramblelist">S.RambleList</a> that is linked to an instance of a Leaflet Map. A S.Ramble will be added to the list for each ID passed in as a parameter.</td>
 				</tr>
@@ -148,9 +148,9 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>new S.Ramble</code></td>
 					<td><code><ul>
-						<li>&lt;L.Map&gt; map</li>
-						<li>&lt;String&gt; id</li>
-						<li>&lt;Ramble Options&gt; options</li>
+						<li>&lt;<a target="_blank" href="http://leaflet.cloudmade.com/reference.html#map">L.Map</a>&gt; map</li>
+						<li>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a>&gt; id</li>
+						<li>&lt;<a href="#ramblelist_options">Ramble Options</a>&gt; options</li>
 					</ul></code></td>
 					<td>Creates a new S.Ramble that is linked to an instance of a Leaflet Map.</td>
 				</tr>
@@ -230,7 +230,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>error</code></td>
 					<td><code>Event</code></td>
-					<td></td>
+					<td>Fired when an error occurs in the video.</td>
 				</tr>
 			</table>
 			<h4 id="ramble_methods">Methods</h4>
@@ -244,7 +244,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>getType</code></td>
 					<td><code>&nbsp;</code></td>
-					<td><code>&lt;String&gt; type</code></td>
+					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a>&gt; type</code></td>
 					<td>Returns <code>video</code> or <code>image</code> depending on the type of the video, or null if the video hasn't been initialized.</td>				
 				</tr>
 				<tr>
@@ -260,12 +260,6 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td></td>
 				</tr>
 				<tr>
-					<td><code>syncVideo</code></td>
-					<td><code>&nbsp;</code></td>
-					<td><code>&nbsp;</code></td>
-					<td>Synchronizes the marker with current video time.</td>
-				</tr>
-				<tr>
 					<td><code>reset</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
@@ -274,12 +268,12 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>getTime</code></td>
 					<td><code>&nbsp;</code></td>
-					<td><code>&lt;Number&gt; time</code></td>
+					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number/">Number</a>&gt; time</code></td>
 					<td>Returns the current time of the video playing if the Ramble type is <code>video</code>.</td>
 				</tr>
 				<tr>
 					<td><code>setTime</code></td>
-					<td><code>&lt;Number&gt; time</code></td>
+					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number/">Number</a>&gt; time</code></td>
 					<td><code>this</code></td>
 					<td>Sets the current time of the video playing if the Ramble type is <code>video</code>.</td>
 				</tr>
@@ -322,7 +316,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 				<tr>
 					<td><code>getLatLng</code></td>
 					<td><code></code></td>
-					<td><code>&lt;L.LatLng&gt; latLng</code></td>
+					<td><code>&lt;<a target="_blank" href="http://leaflet.cloudmade.com/reference.html#latlng">L.LatLng</a>&gt; latLng</code></td>
 					<td>Returns the starting LatLong object for the Ramble.</td>
 				</tr>
 				<!--
@@ -337,7 +331,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 
 			<h3 id="marker">S.Marker</h3>
-			<p>A Marker is a customized Leaflet marker that adds rotation to all of the functionality that would ordinarily exist in a Marker object. However, since the Marker is tied so closely to a Ramble object, the marker should not be manipulated directly. As such, most methods that will modify the Marker are called through the Marker's corresponding Ramble object. An S.Marker inherits from a L.Marker.</p>
+			<p>A <a href="#marker">S.Marker</a> is a customized Leaflet marker that adds rotation to all of the functionality that would ordinarily exist in a Marker object. However, since the Marker is tied so closely to a Ramble object, the marker should not be manipulated directly. As such, most methods that will modify the Marker are called through the Marker's corresponding Ramble object. An <a href="#marker">S.Marker</a> inherits from a <a target="_blank" href="http://leaflet.cloudmade.com/reference.html#marker">L.Marker</a>.</p>
 			<h3 id="config">S.Config</h3>
 			<p>The config namespace specifies several global configuration objects. Normally, using the default values should be sufficient.</p>
 			<h4 id="config_options">Options</h4>
@@ -350,13 +344,13 @@ list = new S.RambleList(map,tokens);</code></pre>
 				</tr>
 				<tr>
 					<td><code>BASE_URL</code></td>
-					<td><code>String</code></td>
+					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a></code></td>
 					<td><code>"/"</code></td>
 					<td>A reference to the base of the site.</td>
 				</tr>				
 				<tr>
 					<td><code>DATA_URL</code></td>
-					<td><code>String</code></td>
+					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a></code></td>
 					<td><code>"/data"</code></td>
 					<td>A reference to the base of the data storage.</td>
 				</tr>

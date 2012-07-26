@@ -100,16 +100,8 @@
 	margin:5px;
 }
 
-.strabo-popup-content video {
-    overflow:hidden;
-    -moz-border-radius:40px;
-    -webkit-border-radius:40px;
-    border-radius:40px;
-
-}
-
 .strabo-popup-content-wrapper,.strabo-popup-tip {
-	background:#000;
+	background:#333;
 	color:#fff;
 	box-shadow:0 3px 10px #888;
 	-moz-box-shadow:0 3px 10px #888;
@@ -117,13 +109,13 @@
 }
 
 .strabo-popup-content-wrapper {
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-	border-radius:20px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
 }
 
 .strabo-popup-content {
-	font:12px/1.4 "Helvetica Neue",Arial,Helvetica,sans-serif;
+	font:12px/1.4 "PT Sans",Arial,Helvetica,sans-serif;
 }
 
 .strabo-popup-close-button {
@@ -131,6 +123,12 @@
 	background-image: url(images/popup-close.png);
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-color:#000;
+}
 
+.strabo-popup-video {
+
+}
+
+.strabo-popup-image {
+	border-radius:8px;
 }

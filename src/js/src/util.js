@@ -21,11 +21,13 @@ S.Util = {
 		else if (video.canPlayType('video/ogg')) video.src = S.Util.mediaURL(token) + ".ogg";
 		else video.innerHTML = S.ERROR_CANNOT_PLAY_TYPE;
 		video.controls = "controls";
+		video.setAttribute('class','strabo-popup-video');
 		return video;
 	},
 	createPhoto: function(token) {
 		var image = document.createElement('img');
 		image.src = S.Util.mediaURL(token)+".jpg";
+		image.setAttribute('class','strabo-popup-image');
 		return image;
 	},
 	ERROR_CANNOT_PLAY_TYPE: "Sorry, your browser cannot play HTML5 Video. Please try using <a href='http://google.com/chrome'>Google Chrome</a> for best results",

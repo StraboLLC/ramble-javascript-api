@@ -6,7 +6,8 @@ var S = {
 	currentRamble:null,
 	setCurrentResponse:function(response) {
 		this.currentResponse=response;
-	}
+	},
+	version:"0.1.0"
 };
 
 S.Config = {
