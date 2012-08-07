@@ -1,44 +1,3 @@
-.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
-  -webkit-transition: -webkit-transform 0.25s ease-out, opacity 0.25s ease-in;
-  -moz-transition: -moz-transform 0.25s ease-out, opacity 0.25s ease-in;
-  -o-transition: -o-transform 0.25s ease-out, opacity 0.25s ease-in;
-  transition: transform 0.25s ease-out, opacity 0.25s ease-in; }
-
-.marker-cluster-small {
-  background-color: rgba(181, 226, 140, 0.6); }
-
-.marker-cluster-small div {
-  background-color: rgba(110, 204, 57, 0.6); }
-
-.marker-cluster-medium {
-  background-color: rgba(241, 211, 87, 0.6); }
-
-.marker-cluster-medium div {
-  background-color: rgba(240, 194, 12, 0.6); }
-
-.marker-cluster-large {
-  background-color: rgba(253, 156, 115, 0.6); }
-
-.marker-cluster-large div {
-  background-color: rgba(241, 128, 23, 0.6); }
-
-.marker-cluster {
-  text-align: center;
-  background-clip: padding-box;
-  border-radius: 20px; }
-
-.marker-cluster div {
-  width: 30px;
-  height: 30px;
-  margin-left: 5px;
-  margin-top: 5px;
-  text-align: center;
-  border-radius: 15px;
-  font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif; }
-
-.marker-cluster span {
-  line-height: 30px; }
-
 .video-popup-title, .photo-popup-title {
   font-family: sans-serif;
   font-size: 20px;
@@ -151,3 +110,14 @@
 
 .strabo-popup-image {
   border-radius: 8px; }
+
+.strabo-count-marker {
+  margin-left: -12px;
+  margin-top: -12px;
+  padding: 4px;
+  height: 20px;
+  width: 20px;
+  border-radius: 30px;
+  background: rgba(100, 100, 255, 0.8);
+  text-align: center;
+  vertical-align: middle; }
