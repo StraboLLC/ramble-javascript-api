@@ -69,7 +69,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	r.start = new L.LatLng(r.latitude, r.longitude);
 	r._latLngs = S.Util.pointsToLatLngs(r.points);
 	r._icon = new S.Icon();
-	r.marker = new S.Marker(r.start);
+	r.marker = new S.Marker(r.start, {icon:r._icon});
 	r.marker.setIconAngle(Math.round((r.heading)));
 	if (r._latLngs.length > 1) {
 		r.polyline = new L.Polyline(r._latLngs, {

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>API Test</title>
+
+	<link rel="stylesheet" href="../src/js/libs/leaflet/leaflet.css" type="text/css" />
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+	<link href="/style.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../build/jquery.min.js"></script>
+	<script type="text/javascript" src="../build/leaflet.min.js"></script>
+
+	<style>
+		html,body {
+			height:100%;
+			width: 100%;
+		}
+	</style>
+
+	<script>
+		var map;
+		$(document).ready(function() {
+			map = new L.Map('map', {});
+			map.setView(new L.LatLng(43.62439567002734,-72.5178337097168),13);
+			var openCycleMap = new L.TileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png');
+			map.addLayer(openCycleMap);
+			S.Config.MEDIA_URL = "http://ns.data.api.strabo.co.s3-website-us-east-1.amazonaws.com";
+
+			// Ramble Implementation goes here.
+
+
+
+
+		});
+	</script>
+
+
+</head>
+<body>
+	<div id="map" style="height:100%;width:100%;"></div>
+</body>
+</html>
