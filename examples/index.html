@@ -4,19 +4,23 @@
 	<meta charset="UTF-8">
 	<title>API Test</title>
 
-	<link rel="stylesheet" href="../src/libs/leaflet/leaflet.css" type="text/css" />
+	<link rel="stylesheet" href="../src/js/libs/leaflet/leaflet.css" type="text/css" />
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="../build/ramble.min.css" type="text/css" />
 
-	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
 	<link href="/style.css" rel="stylesheet" type="text/css">
 
 
 	<script type="text/javascript" src="../build/jquery.min.js"></script>
 	<script type="text/javascript" src="../build/leaflet.min.js"></script>
+
+	<link rel="stylesheet" href="../src/js/libs/markercluster/MarkerCluster.css" />
+	<link rel="stylesheet" href="../src/js/libs/markercluster/MarkerCluster.Default.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../src/js/libs/markercluster/MarkerCluster.Default.ie.css" /><![endif]-->
+	<script src="../src/js/libs/markercluster/leaflet.markercluster-src.js"></script>
+
+
 	<script type="text/javascript" src="../build/ramble.min.js"></script>
-
-	
-
 
 	<script>
 		var list, map;
@@ -32,16 +36,24 @@
 				"OpenCycleMap":openCycleMap,
 				"Stamen Terrain":stamenTerrainMap,
 				"ESRI World Topo":esriWorldTopo,
-				"ESRI World Imagery":esriWorldImagery	
+				"ESRI World Imagery":esriWorldImagery
 			};
 			var layersControl = new L.Control.Layers(basemaps);
 			map.addLayer(openCycleMap);
 			map.addControl(layersControl);
 
 			S.Config.MEDIA_URL = "http://ns.data.api.strabo.co.s3-website-us-east-1.amazonaws.com";
-			var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"];
+/* 			var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"]; */
+/* 			var tokens = ["06d3097f81eceab68ab53565db16ec548d378dd6cf36437a24b38f430c9a59c2","801aed9ddb4249074b18ca649cbdc06580d5b2839d98745da92b0042126b27c5"]; */
+			var tokens = [];
+			tokens.push("1e511fc0ad6d695004e681ae97f53f02b221fd01188a621743d2cb917a4b99fe");
+			tokens.push("60671797ea73b76cc295b9f08b5dfcdb7da29d0a327049253190dcbc442feb48");
+			tokens.push("7f646da7ce71210620ae0bb2a5dd00aa8a2bc13f7acc40c0b7c4facb362ea316");
+			tokens.push("9b5987daea1715e65d82af49ca89fe355bd79dc6b4e1c3c4f05f9f62b6135a15");
+
+
 			list = new S.RambleList(map,tokens);
-			
+
 /* 			t = new S.Ramble(map,"fbf7ddb41122727a05725ddc5ef28498"); */
 		});
 	</script>

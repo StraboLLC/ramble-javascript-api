@@ -24,6 +24,8 @@
 	-o-transition:opacity .2s linear;
 	transition:opacity .2s linear;
 	opacity:1;
+
+/*
 	-webkit-transition-property: -webkit-transform;
 	-webkit-transition-duration: .1s;
 	-webkit-transition-timing-function: linear;
@@ -33,6 +35,8 @@
 	-o-transition-property: -o-transform;
 	-o-transition-duration: .1s;
 	-o-transition-timing-function: linear;
+*/
+
 }
 
 /* Popup layout */
@@ -115,7 +119,7 @@
 }
 
 .strabo-popup-content {
-	font:12px/1.4 "PT Sans",Arial,Helvetica,sans-serif;
+	font:12px/1.4 'PT Sans',Helvetica,Arial,sans-serif;
 }
 
 .strabo-popup-close-button {

@@ -5,7 +5,7 @@
 	<title>Ramble API</title>
 	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
 	<link href="/style.css" rel="stylesheet" type="text/css">
-	
+
 	<link rel="stylesheet" href="http://yandex.st/highlightjs/7.0/styles/monokai.min.css">
 	<script src="http://yandex.st/highlightjs/7.0/highlight.min.js"></script>
 </head>
@@ -17,23 +17,23 @@
 		</header>
 		<article>
 			<h1>Ramble API Documentation</h1>
-			<p>The Ramble API, created by Strabo with intent for NatureShare integration, consists of an iOS video recorder module, 
+			<p>The Ramble API, created by Strabo with intent for NatureShare integration, consists of an iOS video recorder module,
 			a server-side video encoding and storage as well as a JavaScript client-side library for viewing Ramble videos in browser.</p>
-			<p>The server-side component, written in Ruby on Rails, is designed to be as modular as possible. The server receives uploads 
-			from the iOS application in the form of a POST request. The server then sends these videos to Panda Encoding through Amazon S3. 
-			After the Panda API finishes transcoding the videos, they are stored permanently on a S3 Bucket, where the videos and the 
+			<p>The server-side component, written in Ruby on Rails, is designed to be as modular as possible. The server receives uploads
+			from the iOS application in the form of a POST request. The server then sends these videos to Panda Encoding through Amazon S3.
+			After the Panda API finishes transcoding the videos, they are stored permanently on a S3 Bucket, where the videos and the
 			geographic information may be server back to the client-side viewer.</p>
-			<p>The client-side component, written in the form of a JavaScript library using several HTML5 APIs manages playback of the Ramble 
-			videos. This library requires Leaflet maps for playback. Applications using the Ramble web player should be written in JavaScript 
+			<p>The client-side component, written in the form of a JavaScript library using several HTML5 APIs manages playback of the Ramble
+			videos. This library requires Leaflet maps for playback. Applications using the Ramble web player should be written in JavaScript
 			and can leverage the methods defined in the public API.</p>
-			
+
 			<p>Use of this API is only available with written consent from Strabo, LLC.</p>
-			
+
 			<h2>Implement the JavaScript API</h2>
 			<p>Include the Ramble JavaScript API using the following line of Code.</p>
 			<pre><code class="html">&lt;script src="http://api.strabo.co/build/ramble.min.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
-			
-			
+
+
 			<p>Initialize Leaflet Maps. A simple Leaflet map instance can be generated below. For more information, see the <a target="_blank" href="http://leaflet.cloudmade.com/">
 			Leaflet website and API</a>. Note, the Ramble JavaScript API does not include the Leaflet API.
 			</p>
@@ -53,16 +53,16 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 
 			<p>Once initialized, Ramble Videos can be manipulated using the API below.</p>
-			
+
 			<h2>API Reference</h2>
-		
+
 			<ul>
 				<li><a href="#ramblelist">S.RambleList</a></li>
 				<li><a href="#ramble">S.Ramble</a></li>
 				<li><a href="#marker">S.Marker</a></li>
 				<li><a href="#config">S.Config</a></li>
 				<li><a href="#util">S.Util</a></li>
-			
+
 			</ul>
 			<h3 id="ramblelist">S.RambleList</h3>
 			<p>A RambleList an object used to store and manipulate multiple Rambles. It provides much of the same functionality that an individual Ramble would provide.</p>
@@ -83,7 +83,6 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td>Creates a new <a href="#ramblelist">S.RambleList</a> that is linked to an instance of a Leaflet Map. A S.Ramble will be added to the list for each ID passed in as a parameter.</td>
 				</tr>
 			</table>
-<!--
 			<h4 id="ramblelist_options">Options</h4>
 			<table>
 				<tr>
@@ -93,12 +92,13 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<th>Description</th>
 				</tr>
 				<tr>
-					<td><code></code></td>
-					<td><code></code></td>
-					<td><code></code></td>
-					<td></td>
+					<td><code>clustering</code></td>
+					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean/">Boolean</a></code></td>
+					<td><code>false</code></td>
+					<td>Determines whether Markers in an S.RambleList should cluster together if they are nearby on the map.</td>
 				</tr>
 			</table>
+<!--
 			<h4 id="ramblelist_events">Events</h4>
 			<table>
 				<tr>
@@ -125,17 +125,22 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>show</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
-					<td>Shows all Rambles in the RambleList</td>				
+					<td>Shows all Rambles in the RambleList</td>
 				</tr>
 				<tr>
 					<td><code>hide</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
-					<td>Hides all Rambles in the RambleList</td>				
+					<td>Hides all Rambles in the RambleList</td>
 				</tr>
+				<tr>
+					<td><code>findRambleByToken</code></td>
+					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a>&gt; token</code></td>
+					<td><code>&lt;<a target="_blank" href="#ramble">S.Ramble</a>&gt; ramble</code></td>
+					<td>Searche the RambleList for an instance of a Ramble by a given token parameter.</td>
 			</table>
-			
-			
+
+
 			<h3 id="ramble">S.Ramble</h3>
 			<p>A S.Ramble is the principal class for storing geographic and video information about a particular capture. It controls playback as well as storage for a video and extends off of the Leaflet maps L.Popup class. It is inherently bound to a Marker that moves across the map in conjunction with the playback of the associated video.</p>
 			<h4 id="ramble_constructor">Constructor</h4>
@@ -164,7 +169,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<th>Description</th>
 				</tr>
 				<tr>
-					<td><code>rambleList</code></td>
+					<td><code>list</code></td>
 					<td><code><a href="#ramblelist">S.RambleList</a></code></td>
 					<td><code>null</code></td>
 					<td>A reference to the RambleList that can manipulate a specific Ramble.</td>
@@ -245,7 +250,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>getType</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a>&gt; type</code></td>
-					<td>Returns <code>video</code> or <code>image</code> depending on the type of the video, or null if the video hasn't been initialized.</td>				
+					<td>Returns <code>video</code> or <code>image</code> depending on the type of the video, or null if the video hasn't been initialized.</td>
 				</tr>
 				<tr>
 					<td><code>show</code></td>
@@ -347,7 +352,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a></code></td>
 					<td><code>"/"</code></td>
 					<td>A reference to the base of the site.</td>
-				</tr>				
+				</tr>
 				<tr>
 					<td><code>DATA_URL</code></td>
 					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a></code></td>
@@ -357,7 +362,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 			</table>
 			<h3 id="util">S.Util</h3>
 			<p>The Util object serves as a helper namespace that stores many static functions as well as constants that are important for the library.</p>
-			
+
 		</article>
 	</div>
 	<footer>

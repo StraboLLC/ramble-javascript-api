@@ -13,7 +13,10 @@ S.Ramble = function(map, rambleID, opts) {
 		this._error("rambleID parameter cannot be undefined.");
 	}
 	this.id = rambleID;
-	this._options = opts;
+	this._options = opts || {};
+	if(this._options.addToMap==undefined) {
+		this._options.addToMap = true;
+	}
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
 	this.MAP_HEIGHT = map.getSize().y;
@@ -74,7 +77,18 @@ S.Ramble.prototype._processResponse = function(response) {
 		});
 	}
 
-	r.show();
+	if(r._options.addToMap) {
+		r.show();
+	} else {
+		r.show();
+/*
+		r._options.list.cluster.addLayer(r.marker);
+		if(r.polyline) {
+			r.map.addLayer(r.polyline);
+		}
+		r.map.addLayer(r._options.list.cluster);
+*/
+	}
 	if (r.type == "video") {
 		r._initializeVideoPopup();
 		r.video.addEventListener('timeupdate', function() {
@@ -139,7 +153,7 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		this.photo.style.width = (this.MAP_WIDTH/4)+"px";
 		container.appendChild(photoTitle);
 		container.appendChild(this.photo);
-		this.marker.bindPopup(container);		
+		this.marker.bindPopup(container);
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 }
 
