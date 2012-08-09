@@ -77,17 +77,17 @@ S.Ramble.prototype._processResponse = function(response) {
 		});
 	}
 
-	if(r._options.addToMap) {
+	if(!r._options.clustering) {
 		r.show();
 	} else {
-		r.show();
-/*
+/* 		r.show(); */
+		console.log("Clustering");
+
 		r._options.list.cluster.addLayer(r.marker);
 		if(r.polyline) {
 			r.map.addLayer(r.polyline);
 		}
-		r.map.addLayer(r._options.list.cluster);
-*/
+
 	}
 	if (r.type == "video") {
 		r._initializeVideoPopup();
