@@ -117,10 +117,11 @@
 	background-repeat:no-repeat;
 }
 
-.strabo-popup-video {
-
+video.strabo-popup-video {
+	max-width: 300px;
 }
 
-.strabo-popup-image {
+img.strabo-popup-image {
 	border-radius:8px;
+	max-width: 300px;
 }

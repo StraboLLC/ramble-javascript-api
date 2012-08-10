@@ -1,4 +1,3 @@
-
 S.Ramble = function(map, rambleID, opts) {
 	this.fireEvent("constructed", {
 		map: map,
@@ -13,7 +12,6 @@ S.Ramble = function(map, rambleID, opts) {
 	}
 	this.id = rambleID;
 	this._options = opts || {};
-
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
 	this.MAP_HEIGHT = map.getSize().y;
@@ -38,18 +36,14 @@ S.Ramble = function(map, rambleID, opts) {
 	// Talk to the Server to Retrieve Geo-Data
 	this._pull();
 };
-
 S.Ramble.prototype._pull = function() {
 	this.fireEvent("geodatapull");
-
 	//Process Response Through JSONP Method
 	S.rambles[this.id] = this;
 	var myscript = document.createElement('script');
 	myscript.setAttribute('src', S.Config.MEDIA_URL + "/" + this.id + "/" + this.id + ".js");
 	document.body.appendChild(myscript);
-
 };
-
 S.Ramble.prototype._processResponse = function(response) {
 	var r = this;
 	//response = response.response;
@@ -67,7 +61,8 @@ S.Ramble.prototype._processResponse = function(response) {
 	r._latLngs = S.Util.pointsToLatLngs(r.points);
 	r._icon = new S.Icon();
 	r.marker = new S.Marker(r.start, {
-		icon : r._icon
+		icon: r._icon,
+		count: 1
 	});
 	r.marker.setIconAngle(Math.round((r.heading)));
 	if (r._latLngs.length > 1) {
@@ -75,7 +70,6 @@ S.Ramble.prototype._processResponse = function(response) {
 			color: "#DB6C4D"
 		});
 	}
-
 	if (!r._options.clustering) {
 		r.show();
 	} else {
@@ -83,26 +77,26 @@ S.Ramble.prototype._processResponse = function(response) {
 	}
 	if (r.type === "video") {
 		r._initializeVideoPopup();
-		r.video.addEventListener('timeupdate', function () {
+		r.video.addEventListener('timeupdate', function() {
 			r._updateMap();
 			r.fireEvent("timeupdate");
 		});
-		r.video.addEventListener("ended", function () {
+		r.video.addEventListener("ended", function() {
 			r.reset();
 			r.fireEvent("ended");
 		});
-		r.video.addEventListener("seeking", function () {
+		r.video.addEventListener("seeking", function() {
 			r._syncVideo();
 			r.fireEvent("seeking");
 		});
-		r.video.addEventListener("seeked", function () {
+		r.video.addEventListener("seeked", function() {
 			r._syncVideo();
 			r.fireEvent("seeked");
 		});
-		r.video.addEventListener("play", function () {
+		r.video.addEventListener("play", function() {
 			r.fireEvent("play");
 		});
-		r.video.addEventListener("pause", function () {
+		r.video.addEventListener("pause", function() {
 			r.fireEvent("pause");
 		});
 	} else if (r.type === "image") {
@@ -110,17 +104,14 @@ S.Ramble.prototype._processResponse = function(response) {
 	}
 	r.fireEvent('geodatapulled');
 }
-
 S.Ramble.prototype.show = function() {
 	if (this.polyline) this.map.addLayer(this.polyline);
 	this.map.addLayer(this.marker);
 };
-
 S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
 	this.map.removeLayer(this.marker);
 };
-
 S.Ramble.prototype._initializeVideoPopup = function() {
 	if (this.type == "video") {
 		var container = document.createElement('div');
@@ -128,27 +119,25 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		videoTitle.setAttribute('class', 'video-popup-title');
 		videoTitle.innerHTML = this.title;
 		this.video = S.Util.createVideo(this.token);
-		this.video.style.width = (this.MAP_WIDTH/4)+"px";
+		this.video.style.width = (this.MAP_WIDTH / 4) + "px";
 		container.appendChild(videoTitle);
 		container.appendChild(this.video);
 		this.marker.bindPopup(container);
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype._initializePhotoPopup = function() {
-	if(this.type == "image") {
+	if (this.type == "image") {
 		var container = document.createElement('div');
 		var photoTitle = document.createElement('div');
 		photoTitle.setAttribute('class', 'photo-popup-title');
 		photoTitle.innerHTML = this.title;
 		this.photo = S.Util.createPhoto(this.token);
-		this.photo.style.width = (this.MAP_WIDTH/4)+"px";
+		this.photo.style.width = (this.MAP_WIDTH / 4) + "px";
 		container.appendChild(photoTitle);
 		container.appendChild(this.photo);
 		this.marker.bindPopup(container);
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 }
-
 S.Ramble.prototype._updateMap = function() {
 	if (this.type == "video" && this.points) {
 		var pointTime;
@@ -169,21 +158,18 @@ S.Ramble.prototype._updateMap = function() {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype._syncVideo = function() {
 	if (this.video) {
 		this._getPointByTime(this.video.currentTime);
 		this._setCurrentPoint(this.currentPoint);
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.reset = function() {
 	if (this.video) {
 		this.setTime(0);
 		this.fireEvent("reset");
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype._getPointByTime = function(timestamp, head, tail) {
 	head = head || 0;
 	tail = tail || this.points.length;
@@ -197,7 +183,6 @@ S.Ramble.prototype._getPointByTime = function(timestamp, head, tail) {
 		this._getPointByTime(timestamp, head, midpoint);
 	}
 };
-
 S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 	if (this.video && this.marker) {
 		this.currentPoint = currentPoint;
@@ -211,13 +196,11 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 		this.marker.setLatLng(new L.LatLng(this.points[this.currentPoint].coords[0], this.points[this.currentPoint].coords[1]));
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.getTime = function() {
 	if (this.video) {
 		return this.video.currentTime;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.setTime = function(newTime) {
 	if (this.video) {
 		if (newTime < 0 || newTime >= this.video.duration) this._error("Suggested time is out of bounds.");
@@ -227,23 +210,19 @@ S.Ramble.prototype.setTime = function(newTime) {
 		return this;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.getLatLng = function() {
 	return this.start;
 };
-
 S.Ramble.prototype.play = function() {
 	if (this.video) {
 		this.video.play();
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.pause = function() {
 	if (this.video) {
 		this.video.pause();
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.playPause = function() {
 	if (this.video) {
 		if (this.video.paused) {
@@ -253,7 +232,6 @@ S.Ramble.prototype.playPause = function() {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-
 S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	var events = this._events = this._events || {};
 	events[type] = events[type] || [];
@@ -263,12 +241,10 @@ S.Ramble.prototype.addEventListener = function(type, fn, context) {
 	});
 	return this;
 };
-
 S.Ramble.prototype.hasEventListeners = function(type) {
 	var k = '_events';
 	return (k in this) && (type in this[k]) && (this[k][type].length > 0);
 };
-
 S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -281,11 +257,9 @@ S.Ramble.prototype.removeEventListener = function(type, fn, context) {
 	}
 	return this;
 };
-
 S.Ramble.prototype.getType = function() {
 	return this.type;
 };
-
 S.Ramble.prototype.fireEvent = function(type, data) {
 	if (!this.hasEventListeners(type)) {
 		return this;
@@ -300,7 +274,6 @@ S.Ramble.prototype.fireEvent = function(type, data) {
 	}
 	return this;
 };
-
 S.Ramble.prototype._error = function(parameter) {
 	var msg = "Ramble-" + this.id + ": " + parameter;
 	this.fireEvent("error", {

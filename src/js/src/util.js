@@ -1,6 +1,4 @@
-
 S.Util = {
-
 	pointsToLatLngs: function(points) {
 		var results = [];
 		for (var x in points) {
@@ -24,16 +22,25 @@ S.Util = {
 			video.innerHTML = S.ERROR_CANNOT_PLAY_TYPE;
 		}
 		video.controls = "controls";
-		video.setAttribute('class','strabo-popup-video');
+		video.setAttribute('class', 'strabo-popup-video');
+		video.style.maxWidth="300px";
 		return video;
 	},
 	createPhoto: function(token) {
 		var image = document.createElement('img');
-		image.src = S.Util.mediaURL(token)+".jpg";
-		image.setAttribute('class','strabo-popup-image');
+		image.src = S.Util.mediaURL(token) + ".jpg";
+		image.setAttribute('class', 'strabo-popup-image');
+		image.style.maxWidth="300px";
 		return image;
 	},
 	ERROR_CANNOT_PLAY_TYPE: "Sorry, your browser cannot play HTML5 Video. Please try using <a href='http://google.com/chrome'>Google Chrome</a> for best results",
 	ERROR_NOT_VIDEO: "This method can only be called on video typed rambles.",
 	ERROR_NOT_PHOTO: "This method can only be called on photo typed rambles."
 };
+if (!Array.prototype.forEach) {
+	Array.prototype.forEach = function(fn, scope) {
+		for (var i = 0, len = this.length; i < len; ++i) {
+			fn.call(scope || this, this[i], i, this);
+		}
+	}
+}

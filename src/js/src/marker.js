@@ -53,6 +53,15 @@ S.Marker = L.Marker.extend({
 		if (this._popup && this._popup.connected) {
 			this._popup.setLatLng(latlng);
 		}
+	},
+	getCount: function() {
+		return this.options.count || 1;
+	},
+	setCount: function(count) {
+		this.options.count=count;
+		return this;
+	},
+	isClusterMarker: function() {
+		return this.options.isClusterMarker || false;
 	}
-
 });

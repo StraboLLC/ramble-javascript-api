@@ -1,7 +1,16 @@
 "use strict";
-
 S.Popup = L.Popup.extend({
-	connected:true,
+	connected: true,
+	options: {
+		minWidth: 50,
+		maxWidth: 300,
+		maxHeight: null,
+		autoPan: true,
+		closeButton: true,
+		offset: new L.Point(0, 6),
+		autoPanPadding: new L.Point(5, 5),
+		className: ''
+	},
 	_initLayout: function() {
 		var prefix = 'strabo-popup',
 			container = this._container = L.DomUtil.create('div', prefix + ' ' + this.options.className + ' strabo-zoom-animated'),
@@ -29,7 +38,6 @@ S.Popup = L.Popup.extend({
 		this._adjustPan();
 	}
 });
-
 S.Marker.include({
 	openPopup: function() {
 		if (this._popup && this._map) {
