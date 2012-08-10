@@ -12,6 +12,6 @@ var S = {
 
 S.Config = {
 	SITE_BASE_URL: "/",
-	MEDIA_URL: "/data" 
+	MEDIA_URL: "/data"
 	// MEDIA_URL: "http://ns.data.api.strabo.co.s3-website-us-east-1.amazonaws.com"
 };

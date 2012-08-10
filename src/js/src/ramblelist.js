@@ -1,4 +1,3 @@
-"use strict";
 
 S.RambleList = function(map, ids, options) {
 	var theRambleList = this;
@@ -7,34 +6,30 @@ S.RambleList = function(map, ids, options) {
 	this.ids = ids;
 	this.rambles = [];
 
-	this.cluster = new L.MarkerClusterGroup();
-
-	var toCluster=this.options.clustering;
+	var clustering=this.options.clustering;
 	var popup = new L.Popup();
 
 	for (var x in ids) {
 		var aRamble = new S.Ramble(map, ids[x], {
 			addToMap: false,
 			list: theRambleList,
-			clustering: toCluster
+			clustering: clustering
 		});
 		this.rambles.push(aRamble);
 	}
 	if(this.options.clustering) {
 
-/*
 		map.on("zoomend", function() {
 			theRambleList.checkMarkers();
 		});
-		for(var x in this.rambles) {
-			this.rambles[x].addEventListener("geodatapulled",function() {
+		for(x in this.rambles) {
+			this.rambles[x].addEventListener("geodatapulled", function() {
 				theRambleList.checkMarkers();
 			});
 		}
-*/
-		this.map.addLayer(this.cluster);
+
 	}
-}
+};
 S.RambleList.prototype.show = function() {
 	for (var x in this.rambles) {
 		this.rambles[x].show();
@@ -52,13 +47,13 @@ S.RambleList.prototype.checkMarkers = function() {
 	}
 	this.displayMarkers=[];
 	var shouldProceed=true;
-	for(var x in this.rambles) {
+	for(x in this.rambles) {
 		if(!this.rambles[x].marker) {
 			shouldProceed=false;
 		}
 	}
 	if(shouldProceed) {
-		for(var x in this.rambles) {
+		for(x in this.rambles) {
 			var tmp = this.rambles[x].marker;
 
 			this.map.removeLayer(tmp);
@@ -80,7 +75,7 @@ S.RambleList.prototype.checkMarkers = function() {
 					shouldCluster=true;
 					this.displayMarkers[y]=new L.Marker(new L.LatLng((tmp.getLatLng().lat+tmp2.getLatLng().lat)/2,(tmp.getLatLng().lng+tmp2.getLatLng().lng)/2), {
 						icon: new L.HtmlIcon({
-						    html : "<div class='strabo-count-marker'>"+(tmp2.count+1)+"</div>",
+							html : "<div class='strabo-count-marker'>"+(tmp2.count+1)+"</div>"
 						})
 					});
 					this.displayMarkers[y].generatedMarker=true;
@@ -118,7 +113,7 @@ S.RambleList.prototype.checkMarkers = function() {
 
 				}
 			}
-			if(shouldCluster==false) {
+			if(shouldCluster===false) {
 				tmp.count=1;
 				this.displayMarkers.push(tmp);
 			} else {
@@ -130,7 +125,7 @@ S.RambleList.prototype.checkMarkers = function() {
 		this.map.addLayer(this.displayMarkers[x]);
 	}
 
-}
+};
 S.RambleList.prototype.pullChildren = function(marker) {
 	var result = [];
 	if(marker.children) {
@@ -141,7 +136,7 @@ S.RambleList.prototype.pullChildren = function(marker) {
 		result.push(marker);
 	}
 	return result;
-}
+};
 
 S.RambleList.prototype.findRambleByToken = function(token) {
 	var result;
@@ -151,4 +146,8 @@ S.RambleList.prototype.findRambleByToken = function(token) {
 		}
 	}
 	return result;
-}
+};
+
+S.RambleList.prototype.addRamble = function(token) {
+	this.rambles.push(new S.Ramble(this.map,token));
+};

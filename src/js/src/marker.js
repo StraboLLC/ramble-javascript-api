@@ -1,4 +1,3 @@
-"use strict";
 
 S.Marker = L.Marker.extend({
 
@@ -16,21 +15,17 @@ S.Marker = L.Marker.extend({
 	},
 	_rotate: function() {
 		if (this.options.iconAngle) {
+/*
 			this._icon.style.WebkitTransition = "all .15s linear";
 			this._icon.style.MozTransition = "all .15s linear";
 			this._icon.style.MsTransition = "all .15s linear";
 			this._icon.style.OTransition = "all .15s linear";
-			// this._icon.style.WebkitTransform.replace(/rotate\([0-9\.]*deg\)/gi, "");
-			// console.log("Icon Angle: " + this.options.iconAngle);
-			// console.log("Before: "+this._icon.style.WebkitTransform);
+*/
 			this._icon.style.WebkitTransform += 'translate(0px, 12px)  rotate(' + this.options.iconAngle + 'deg)';
-			// console.log("After:  "+this._icon.style.WebkitTransform);
-			// this._icon.style.WebkitTransform = 'translate(0px, 12px)  rotate(' + this.options.iconAngle + 'deg)';
 			this._icon.style.MozTransform += 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
-			this._icon.style.MsTransform = 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
-			this._icon.style.OTransform = 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
+			this._icon.style.MsTransform += 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
+			this._icon.style.OTransform += 'translate(0px, 12px) rotate(' + this.options.iconAngle + 'deg)';
 		}
-
 	},
 
 	update: function() {
@@ -43,15 +38,9 @@ S.Marker = L.Marker.extend({
 		this._rotate();
 	},
 	setIconAngle: function(iconAngle) {
-
-		if (this._map) {
-			//this._removeIcon();
-		}
-
 		this.options.iconAngle = iconAngle;
 
 		if (this._map) {
-			//this._initIcon();
 			this._reset();
 		}
 	},

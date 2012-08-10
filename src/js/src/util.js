@@ -1,4 +1,3 @@
-"use strict";
 
 S.Util = {
 
@@ -9,17 +8,21 @@ S.Util = {
 		}
 		return results;
 	},
-
 	mediaURL: function(token) {
 		return S.Config.MEDIA_URL + "/" + token + "/" + token;
 	},
 	createVideo: function(token) {
 		var video = document.createElement('video');
 		video.autoplay = false;
-		if (video.canPlayType('video/webm')) video.src = S.Util.mediaURL(token) + ".webm";
-		else if (video.canPlayType('video/mp4')) video.src = S.Util.mediaURL(token) + ".mp4";
-		else if (video.canPlayType('video/ogg')) video.src = S.Util.mediaURL(token) + ".ogg";
-		else video.innerHTML = S.ERROR_CANNOT_PLAY_TYPE;
+		if (video.canPlayType('video/webm')) {
+			video.src = S.Util.mediaURL(token) + ".webm";
+		} else if (video.canPlayType('video/mp4')) {
+			video.src = S.Util.mediaURL(token) + ".mp4";
+		} else if (video.canPlayType('video/ogg')) {
+			video.src = S.Util.mediaURL(token) + ".ogg";
+		} else {
+			video.innerHTML = S.ERROR_CANNOT_PLAY_TYPE;
+		}
 		video.controls = "controls";
 		video.setAttribute('class','strabo-popup-video');
 		return video;

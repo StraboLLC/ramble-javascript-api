@@ -1,4 +1,3 @@
-"use strict";
 
 S.Ramble = function(map, rambleID, opts) {
 	this.fireEvent("constructed", {
@@ -14,9 +13,7 @@ S.Ramble = function(map, rambleID, opts) {
 	}
 	this.id = rambleID;
 	this._options = opts || {};
-	if(this._options.addToMap==undefined) {
-		this._options.addToMap = true;
-	}
+
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
 	this.MAP_HEIGHT = map.getSize().y;
@@ -80,14 +77,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	if(!r._options.clustering) {
 		r.show();
 	} else {
-/* 		r.show(); */
-		console.log("Clustering");
-
-		r._options.list.cluster.addLayer(r.marker);
-		if(r.polyline) {
-			r.map.addLayer(r.polyline);
-		}
-
+		r.show();
 	}
 	if (r.type == "video") {
 		r._initializeVideoPopup();
