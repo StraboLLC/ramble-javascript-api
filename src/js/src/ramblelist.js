@@ -1,13 +1,11 @@
 
-S.RambleList = function(map, ids, options) {
-	var theRambleList = this;
+S.RambleList = function (map, ids, options) {
 	this.options = options || {};
 	this.map = map;
 	this.ids = ids;
 	this.rambles = [];
 
-	var clustering=this.options.clustering;
-	var popup = new L.Popup();
+	var theRambleList = this, clustering = this.options.clustering, popup = new L.Popup();
 
 	for (var x in ids) {
 		var aRamble = new S.Ramble(map, ids[x], {

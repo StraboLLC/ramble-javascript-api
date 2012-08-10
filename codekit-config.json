@@ -9,7 +9,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/ramblelist.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/ramblelist.min.js",
       "fileType" : 5
     },
@@ -97,7 +97,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/config.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/config.min.js",
       "fileType" : 5
     },
@@ -476,7 +476,7 @@
       "outputPathIsSetByUser" : 1,
       "inputAbbreviatedPath" : "\/src\/js\/app.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/build\/ramble.app.min.js",
       "fileType" : 5
     },
@@ -509,7 +509,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/popup.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/popup.min.js",
       "fileType" : 5
     },
@@ -562,7 +562,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/icon.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/icon.min.js",
       "fileType" : 5
     },
@@ -900,7 +900,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/ramble.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/ramble.min.js",
       "fileType" : 5
     },
@@ -1365,8 +1365,8 @@
       "fileType" : 5
     },
     "\/libs\/leaflet\/dist\/leaflet-src.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
+      "ignoreWasSetByUser" : 1,
+      "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 1,
       "inputAbbreviatedPath" : "\/libs\/leaflet\/dist\/leaflet-src.js",
@@ -1479,7 +1479,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/marker.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/marker.min.js",
       "fileType" : 5
     },
@@ -1625,7 +1625,7 @@
       "outputPathIsSetByUser" : 0,
       "inputAbbreviatedPath" : "\/src\/js\/src\/util.js",
       "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
+      "syntaxCheckerStyle" : 2,
       "outputAbbreviatedPath" : "\/src\/js\/src\/util.min.js",
       "fileType" : 5
     },
@@ -2157,9 +2157,9 @@
       "unparam" : 0,
       "newcap" : 0,
       "'continue'" : 0,
-      "sloppy" : 0,
+      "sloppy" : 1,
       "fragment" : 0,
-      "undef" : 0,
+      "undef" : 1,
       "es5" : 0,
       "browser" : 1,
       "properties" : 0,
