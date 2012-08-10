@@ -1,3 +1,6 @@
 [submodule "libs/leaflet"]
 	path = libs/leaflet
 	url = git://github.com/CloudMade/Leaflet.git
+[submodule "libs/LeafletHtmlIcon"]
+	path = libs/LeafletHtmlIcon
+	url = git://github.com/dwnoble/LeafletHtmlIcon.git
