@@ -97,12 +97,8 @@
   background-position: center center;
   background-repeat: no-repeat; }
 
-video.strabo-popup-video {
-  max-width: 300px; }
-
 img.strabo-popup-image {
-  border-radius: 8px;
-  max-width: 300px; }
+  border-radius: 8px; }
 
 .strabo-count-marker {
   margin-left: -12px;

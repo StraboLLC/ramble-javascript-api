@@ -23,14 +23,15 @@ S.Util = {
 		}
 		video.controls = "controls";
 		video.setAttribute('class', 'strabo-popup-video');
-		video.style.maxWidth="300px";
+		video.style.maxWidth = "300px";
+		image.style.width = "300px";
 		return video;
 	},
 	createPhoto: function(token) {
 		var image = document.createElement('img');
-		image.src = S.Util.mediaURL(token) + ".jpg";
+		image.src = S.Util.mediaURL(token) + '.jpg';
 		image.setAttribute('class', 'strabo-popup-image');
-		image.style.maxWidth="300px";
+		image.style.maxWidth = "300px";
 		return image;
 	},
 	ERROR_CANNOT_PLAY_TYPE: "Sorry, your browser cannot play HTML5 Video. Please try using <a href='http://google.com/chrome'>Google Chrome</a> for best results",

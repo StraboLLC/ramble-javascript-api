@@ -11,11 +11,11 @@ S.Ramble = function(map, rambleID, opts) {
 		this._error("rambleID parameter cannot be undefined.");
 	}
 	this.id = rambleID;
-	this._options = opts || {};
+	this.options = opts || {};
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
 	this.MAP_HEIGHT = map.getSize().y;
-	this._options = opts || {};
+
 	this.videoLoaded = false;
 	this.currentPoint = 0;
 	this.title = "";
@@ -70,11 +70,7 @@ S.Ramble.prototype._processResponse = function(response) {
 			color: "#DB6C4D"
 		});
 	}
-	if (!r._options.clustering) {
-		r.show();
-	} else {
-		r.show();
-	}
+	r.show();
 	if (r.type === "video") {
 		r._initializeVideoPopup();
 		r.video.addEventListener('timeupdate', function() {
@@ -103,10 +99,22 @@ S.Ramble.prototype._processResponse = function(response) {
 		r._initializePhotoPopup();
 	}
 	r.fireEvent('geodatapulled');
-}
+};
 S.Ramble.prototype.show = function() {
-	if (this.polyline) this.map.addLayer(this.polyline);
-	this.map.addLayer(this.marker);
+	if (this.options.showRoutes && this.polyline && !this.map.hasLayer(this.polyline)) {
+		this.map.addLayer(this.polyline);
+	}
+	if (this.marker && !this.map.hasLayer(this.marker)) {
+		this.map.addLayer(this.marker);
+	}
+};
+S.Ramble.prototype.showWithRoute = function() {
+	if (this.polyline && !this.map.hasLayer(this.polyline)) {
+		this.map.addLayer(this.polyline);
+	}
+	if (this.marker && !this.map.hasLayer(this.marker)) {
+		this.map.addLayer(this.marker);
+	}
 };
 S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
@@ -119,7 +127,7 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		videoTitle.setAttribute('class', 'video-popup-title');
 		videoTitle.innerHTML = this.title;
 		this.video = S.Util.createVideo(this.token);
-		this.video.style.width = (this.MAP_WIDTH / 4) + "px";
+		this.video.width = "300"; /* 		this.video.style.width = (this.MAP_WIDTH / 4) + "px"; */
 		container.appendChild(videoTitle);
 		container.appendChild(this.video);
 		this.marker.bindPopup(container);
@@ -132,7 +140,7 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		photoTitle.setAttribute('class', 'photo-popup-title');
 		photoTitle.innerHTML = this.title;
 		this.photo = S.Util.createPhoto(this.token);
-		this.photo.style.width = (this.MAP_WIDTH / 4) + "px";
+		this.photo.width = "300"; /* 		this.photo.style.width = (this.MAP_WIDTH / 4) + "px"; */
 		container.appendChild(photoTitle);
 		container.appendChild(this.photo);
 		this.marker.bindPopup(container);
