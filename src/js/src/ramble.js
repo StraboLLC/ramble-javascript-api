@@ -98,6 +98,10 @@ S.Ramble.prototype._processResponse = function(response) {
 	} else if (r.type === "image") {
 		r._initializePhotoPopup();
 	}
+	r.marker.on("click", function() {
+		r.marker.openPopup();
+		r.showWithRoute();
+	});
 	r.fireEvent('geodatapulled');
 };
 S.Ramble.prototype.show = function() {

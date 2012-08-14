@@ -57,6 +57,29 @@ td ul {
 td ul li {
 	list-style: none;
 }
+h2 {
+	border-bottom: 1pt solid #333;
+}
+h3 {
+	font-weight: bold;
+	padding: 4px 12px 3px;
+	margin-left: 0;
+	margin-right: 0;
+	background: rgb(237, 238, 239);
+	border-right: 1px solid rgb(204, 204, 204);
+	border-bottom: 1px solid rgb(204, 204, 204);
+	color: white;
+	background-color: rgb(209, 93, 36);
+	background-image: -moz-linear-gradient(top, rgb(209, 93, 36), rgb(180, 100, 0));
+	background-image: -o-linear-gradient(top, rgb(209, 93, 36), rgb(180, 100, 0));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(209, 93, 36)), to(rgb(180, 100, 0)));
+	background-image: -webkit-linear-gradient(top, rgb(209, 93, 36), rgb(180, 100, 0));
+	background-image: linear-gradient(top, rgb(209, 93, 36), rgb(180, 100, 0));
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.35);
+}
 .container {
 	margin:0 auto;
 	width:900px;

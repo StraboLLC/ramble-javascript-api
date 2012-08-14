@@ -33,6 +33,9 @@
 			<p>Include the Ramble JavaScript API using the following line of Code.</p>
 			<pre><code class="html">&lt;script src="http://api.strabo.co/build/ramble.min.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
 
+			<p>Include the Ramble CSS Stylesheet using the following line of Code. To modify the appearance of the video player, the Ramble stylesheet may be downloaded and modified.</p>
+			<pre><code class="html">&lt;link href="http://api.strabo.co/build/ramble.min.css" rel="stylesheet" type="text/css" /&gt;</code></pre>
+
 
 			<p>Initialize Leaflet Maps. A simple Leaflet map instance can be generated below. For more information, see the <a target="_blank" href="http://leaflet.cloudmade.com/">
 			Leaflet website and API</a>. Note, the Ramble JavaScript API does not include the Leaflet API.
@@ -174,6 +177,12 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>null</code></td>
 					<td>A reference to the RambleList that can manipulate a specific Ramble.</td>
 				</tr>
+				<tr>
+					<td><code>showRoutes</code></td>
+					<td><code>Boolean</code></td>
+					<td><code>false</code></td>
+					<td>Determines whether the ramble should show its route on the page load or only when the marker has been clicked.</td>
+				</tr>
 			</table>
 			<h4 id="ramble_events">Events</h4>
 			<table>
@@ -256,13 +265,19 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>show</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
-					<td></td>
+					<td>Shows the marker for the Ramble, but will only show the route if the <code>showRoutes</code> option is enabled.</td>
+				</tr>
+				<tr>
+					<td><code>showWithRoute</code></td>
+					<td><code>&nbsp;</code></td>
+					<td><code>&nbsp;</code></td>
+					<td>Shows the marker and route for the Ramble.</td>
 				</tr>
 				<tr>
 					<td><code>hide</code></td>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
-					<td></td>
+					<td>Hides the marker and the route from the map.</td>
 				</tr>
 				<tr>
 					<td><code>reset</code></td>
@@ -337,6 +352,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 			<h3 id="marker">S.Marker</h3>
 			<p>A <a href="#marker">S.Marker</a> is a customized Leaflet marker that adds rotation to all of the functionality that would ordinarily exist in a Marker object. However, since the Marker is tied so closely to a Ramble object, the marker should not be manipulated directly. As such, most methods that will modify the Marker are called through the Marker's corresponding Ramble object. An <a href="#marker">S.Marker</a> inherits from a <a target="_blank" href="http://leaflet.cloudmade.com/reference.html#marker">L.Marker</a>.</p>
+			<p>The <a href="#marker">S.Marker</a> contains several properties that are unique to the Ramble API that allow clustering to occur on the map. If <a target="_blank" href="http://leaflet.cloudmade.com/reference.html#marker">L.Marker</a> objects are used, clustering will not work.</p>
 			<h3 id="config">S.Config</h3>
 			<p>The config namespace specifies several global configuration objects. Normally, using the default values should be sufficient.</p>
 			<h4 id="config_options">Options</h4>
