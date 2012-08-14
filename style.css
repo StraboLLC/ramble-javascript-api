@@ -60,7 +60,7 @@ td ul li {
 h2 {
 	border-bottom: 1pt solid #333;
 }
-h3 {
+h3.subheading {
 	font-weight: bold;
 	padding: 4px 12px 3px;
 	margin-left: 0;
