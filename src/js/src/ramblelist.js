@@ -4,6 +4,8 @@ S.RambleList = function(map, ids, options) {
 	this.options.showRoutes = options.showRoutes || false;
 	this.map = map;
 	this.ids = ids;
+	this.size = ids.length;
+	this.completed = 0;
 	this.rambles = [];
 	var theRambleList = this,
 		clustering = this.options.clustering || false,
@@ -15,6 +17,14 @@ S.RambleList = function(map, ids, options) {
 			clustering: clustering,
 			showRoutes: showRoutes
 		});
+		aRamble.addEventListener("geodatapulled", function() {
+			this.completed += 1;
+			if(this.completed == this.size) {
+				this.fireEvent("geodatapulled", {
+					size:this.size
+				});
+			}
+		}, theRambleList);
 		this.rambles.push(aRamble);
 	}
 	if (this.options.clustering) {
@@ -27,16 +37,19 @@ S.RambleList = function(map, ids, options) {
 			});
 		}
 	}
+	this.fireEvent("constructed",this);
 };
 S.RambleList.prototype.show = function() {
 	for (var x in this.rambles) {
 		this.rambles[x].show();
 	}
+	this.fireEvent("show",this);
 };
 S.RambleList.prototype.hide = function() {
 	for (var x in this.rambles) {
 		this.rambles[x].hide();
 	}
+	this.fireEvent("hide",this);
 };
 // Clustering Algorithm
 S.RambleList.prototype.checkMarkers = function() {
@@ -79,7 +92,7 @@ S.RambleList.prototype.checkMarkers = function() {
 						string += "non-clustermarker";
 					}
 					string += ". The current count for the clustermarker is " + (tmp.getCount() + tmp2.getCount());
-					console.log(string);
+					//console.log(string);
 					this.displayMarkers[y] = new S.Marker(new L.LatLng((tmp.getLatLng().lat + tmp2.getLatLng().lat) / 2, (tmp.getLatLng().lng + tmp2.getLatLng().lng) / 2), {
 						icon: new L.HtmlIcon({
 							html: "<div class='strabo-count-marker'>" + (tmp.getCount() + tmp2.getCount()) + "</div>"
@@ -92,49 +105,40 @@ S.RambleList.prototype.checkMarkers = function() {
 					this.displayMarkers[y].children = this.displayMarkers[y].children.concat(this.pullChildren(tmp));
 					this.displayMarkers[y].children = this.displayMarkers[y].children.concat(this.pullChildren(tmp2));
 					if (this.map.getZoom() >= this.map.getMaxZoom()) {
-						var popupContent = "";
+						var popupContent = '<div class="seek-left unselectable"></div><div class="seek-content">';
 						for (var z in this.displayMarkers[y].children) {
-							console.log(this.displayMarkers[y].children[z].isClusterMarker());
-							popupContent += '<div class="ss-capture">';
+							//console.log(this.displayMarkers[y].children[z].isClusterMarker());
+							popupContent += '<div class="ss-capture unselectable">';
 							popupContent += this.displayMarkers[y].children[z]._popup._content.innerHTML;
 							popupContent += '</div>';
 						}
+						popupContent += '</div><div class="seek-right unselectable"></div>';
 						this.displayMarkers[y].bindPopup(popupContent);
 						this.displayMarkers[y].on("click", function() {
-							console.log("Click Detected. Expanding " + this.children.length + " child nodes.");
+							//console.log("Click Detected. Expanding " + this.children.length + " child nodes.");
 							this.openPopup(this._popup);
 							$('.ss-capture').css('display', 'none');
 							var q = this.currentContentIndex;
 							$('.ss-capture')[q].style.display = 'block';
-							this.on("click", function() {
-								this.moveRight();
+							var pq = this;
+							$('.seek-right').click(function() {
+								pq.moveRight();
 							});
-/*
-
-						var m = this;
-						map.removeLayer(m);
-						for (var x in m.children) {
-							map.addLayer(m.children[x]);
-						}
-*/
-/*
-						window.setTimeout(function() {
-							for (var x in m.children) {
-								map.removeLayer(m.children[x]);
-							}
-							map.addLayer(m);
-						}, 3000);
-*/
+							$('.seek-left').click(function() {
+								pq.moveLeft();
+							});
+							$('.strabo-popup-close-button').css('z-index','150');
 						});
 					} else {
 						this.displayMarkers[y].on("click", function() {
+							map.setView(this.getLatLng(), map.getZoom());
 							map.zoomIn();
 						});
 					}
 				} else {}
 			}
 			if (!shouldCluster) {
-				console.log("Forming a new cluster.");
+				//console.log("Forming a new cluster.");
 				this.displayMarkers.push(tmp);
 			}
 		}
@@ -142,7 +146,9 @@ S.RambleList.prototype.checkMarkers = function() {
 	for (x in this.displayMarkers) {
 		this.map.addLayer(this.displayMarkers[x]);
 	}
+	this.fireEvent("cluster",this);
 };
+// Method for recursively grabbing child elements.
 S.RambleList.prototype.pullChildren = function(marker) {
 	var result = [];
 	if (marker.children) {
@@ -154,6 +160,7 @@ S.RambleList.prototype.pullChildren = function(marker) {
 	}
 	return result;
 };
+
 S.RambleList.prototype.findRambleByToken = function(token) {
 	var result;
 	for (var x in this.rambles) {
@@ -165,4 +172,50 @@ S.RambleList.prototype.findRambleByToken = function(token) {
 };
 S.RambleList.prototype.addRamble = function(token) {
 	this.rambles.push(new S.Ramble(this.map, token));
+};
+S.RambleList.prototype.addEventListener = function(type, fn, context) {
+	var events = this._events = this._events || {};
+	events[type] = events[type] || [];
+	events[type].push({
+		action: fn,
+		context: context || this
+	});
+	return this;
+};
+S.RambleList.prototype.hasEventListeners = function(type) {
+	var k = '_events';
+	return (k in this) && (type in this[k]) && (this[k][type].length > 0);
+};
+S.RambleList.prototype.removeEventListener = function(type, fn, context) {
+	if (!this.hasEventListeners(type)) {
+		return this;
+	}
+	for (var i = 0, events = this._events, len = events[type].length; i < len; i++) {
+		if ((events[type][i].action === fn) && (!context || (events[type][i].context === context))) {
+			events[type].splice(i, 1);
+			return this;
+		}
+	}
+	return this;
+};
+S.RambleList.prototype.fireEvent = function(type, data) {
+	if (!this.hasEventListeners(type)) {
+		return this;
+	}
+	var event = L.Util.extend({
+		type: type,
+		target: this
+	}, data);
+	var listeners = this._events[type].slice();
+	for (var i = 0, len = listeners.length; i < len; i++) {
+		listeners[i].action.call(listeners[i].context || this, event);
+	}
+	return this;
+};
+S.RambleList.prototype._error = function(parameter) {
+	var msg = "RambleList-" + this.id + ": " + parameter;
+	this.fireEvent("error", {
+		"text": parameter
+	});
+	if (console) console.error(msg);
 };

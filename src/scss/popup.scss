@@ -108,6 +108,8 @@
 
 .strabo-popup-content {
 	font:12px/1.4 'PT Sans',Helvetica,Arial,sans-serif;
+	position:relative;
+	overflow: hidden;
 }
 
 .strabo-popup-close-button {
@@ -115,6 +117,7 @@
 	background-image: url(images/popup-close.png);
 	background-position:center center;
 	background-repeat:no-repeat;
+	z-index: 150px;
 }
 
 video.strabo-popup-video {
@@ -123,4 +126,50 @@ video.strabo-popup-video {
 
 img.strabo-popup-image {
 	border-radius:8px;
+}
+.seek-left {
+	opacity: 0;
+	position:absolute;
+	background:rgba(255,255,255,.3);
+	background-clip: content-box;
+	width:10%;
+	height:100%;
+	z-index: 100;
+	left:0;
+	top:0;
+	margin-top:28px;
+	-webkit-transition: opacity 0.1s linear;
+	-moz-transition: opacity 0.1s linear;
+	-o-transition: opacity 0.1s linear;
+	-ms-transition: opacity 0.1s linear;
+	transition: opacity 0.1s linear;
+}
+.seek-content {
+	position:relative;
+}
+.seek-right {
+	opacity: 0;
+	position:absolute;
+	background:rgba(255,255,255,.3);
+	background-clip: content-box;
+	width:10%;
+	height:100%;
+	z-index: 100;
+	right:0;
+	top:0;
+	margin-top:28px;
+	-webkit-transition: opacity 0.1s linear;
+	-moz-transition: opacity 0.1s linear;
+	-o-transition: opacity 0.1s linear;
+	-ms-transition: opacity 0.1s linear;
+	transition: opacity 0.1s linear;
+}
+.strabo-popup-content:hover .seek-right,
+.strabo-popup-content:hover .seek-left {
+
+	opacity: 1;
+
+}
+.strabo-popup-close-button {
+	z-index: 150px;
 }

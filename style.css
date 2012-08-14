@@ -47,6 +47,15 @@ th:nth-child(2) {
 pre code {
 	overflow-x: scroll;
 }
+ul.toc {
+	-webkit-column-count: 3;
+	-moz-column-count: 3;
+	-o-column-count: 3;
+	-ms-column-count: 3;
+	column-count: 3;
+	border: 1pt solid rgb(170, 170, 170);
+	padding: 10px;
+}
 td {
 
 }

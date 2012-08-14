@@ -26,7 +26,10 @@
 			<p>The client-side component, written in the form of a JavaScript library using several HTML5 APIs manages playback of the Ramble
 			videos. This library requires Leaflet maps for playback. Applications using the Ramble web player should be written in JavaScript
 			and can leverage the methods defined in the public API.</p>
-
+			<h5>Coming Features:</h5>
+			<ul>
+				<li>Finish Clustering Pins that are Geographically Close</li>
+			</ul>
 			<p>Use of this API is only available with written consent from Strabo, LLC.</p>
 
 			<h2>Implement the JavaScript API</h2>
@@ -59,7 +62,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 			<h2>API Reference</h2>
 
-			<ul>
+			<ul class="toc">
 				<li><a href="#ramblelist">S.RambleList</a></li>
 				<li><a href="#ramble">S.Ramble</a></li>
 				<li><a href="#marker">S.Marker</a></li>
@@ -100,8 +103,13 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>false</code></td>
 					<td>Determines whether Markers in an S.RambleList should cluster together if they are nearby on the map.</td>
 				</tr>
+				<tr>
+					<td><code>showRoutes</code></td>
+					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean/">Boolean</a></code></td>
+					<td><code>false</code></td>
+					<td>Determines whether the ramble should show its route on the page load or only when the marker has been clicked.</td>
+				</tr>
 			</table>
-<!--
 			<h4 id="ramblelist_events">Events</h4>
 			<table>
 				<tr>
@@ -110,12 +118,31 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<th>Description</th>
 				</tr>
 				<tr>
-					<td><code></code></td>
-					<td><code></code></td>
-					<td></td>
+					<td><code>constructued</code></td>
+					<td><code>Event</code></td>
+					<td>Triggered when the RambleList is constructed.</td>
+				</tr>
+				<tr>
+					<td><code>geodatapulled</code></td>
+					<td><code>Event</code></td>
+					<td>Fired when all rambled have been initialized inside of the RambleList.</td>
+				</tr>
+				<tr>
+					<td><code>show</code></td>
+					<td><code>Event</code></td>
+					<td>Fired when the RambleList is made visible.</td>
+				</tr>
+				<tr>
+					<td><code>hide</code></td>
+					<td><code>Event</code></td>
+					<td>Fired when the RambleList is hidden.</td>
+				</tr>
+				<tr>
+					<td><code>cluster</code></td>
+					<td><code>Event</code></td>
+					<td>Fired when the markers in a RambleList cluster.</td>
 				</tr>
 			</table>
--->
 			<h4 id="ramblelist_methods">Methods</h4>
 			<table>
 				<tr>
@@ -141,6 +168,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>&lt;<a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/">String</a>&gt; token</code></td>
 					<td><code>&lt;<a target="_blank" href="#ramble">S.Ramble</a>&gt; ramble</code></td>
 					<td>Searche the RambleList for an instance of a Ramble by a given token parameter.</td>
+				</tr>
 			</table>
 
 
@@ -179,7 +207,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 				</tr>
 				<tr>
 					<td><code>showRoutes</code></td>
-					<td><code>Boolean</code></td>
+					<td><code><a target="_blank" href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean/">Boolean</a></code></td>
 					<td><code>false</code></td>
 					<td>Determines whether the ramble should show its route on the page load or only when the marker has been clicked.</td>
 				</tr>

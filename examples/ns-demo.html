@@ -39,12 +39,15 @@
 			tokens.push("60671797ea73b76cc295b9f08b5dfcdb7da29d0a327049253190dcbc442feb48");
 			tokens.push("7f646da7ce71210620ae0bb2a5dd00aa8a2bc13f7acc40c0b7c4facb362ea316");
 			tokens.push("9b5987daea1715e65d82af49ca89fe355bd79dc6b4e1c3c4f05f9f62b6135a15");
-
+			tokens.push("b18388cda2bcc77837520e5d76019a10035a2483cc624e14cc2821c6522c4c2b");
+/* 			tokens.push("70fd5d25b2d93f0f6e88287a2a11d46b703d2a6df6fefbc478061c1469d8e489"); */
 
 			list = new S.RambleList(map,tokens, {
 				clustering:true
 			});
-
+			list.addEventListener("geodatapulled", function(data) {
+				console.log(data.size);
+			});
 
 
 		});

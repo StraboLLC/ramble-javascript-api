@@ -89,16 +89,63 @@
   border-radius: 10px; }
 
 .strabo-popup-content {
-  font: 12px/1.4 "PT Sans", Helvetica, Arial, sans-serif; }
+  font: 12px/1.4 "PT Sans", Helvetica, Arial, sans-serif;
+  position: relative;
+  overflow: hidden; }
 
 .strabo-popup-close-button {
   padding: 4px;
   background-image: url(images/popup-close.png);
   background-position: center center;
-  background-repeat: no-repeat; }
+  background-repeat: no-repeat;
+  z-index: 150px; }
 
 img.strabo-popup-image {
   border-radius: 8px; }
+
+.seek-left {
+  opacity: 0;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  background-clip: content-box;
+  width: 10%;
+  height: 100%;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  margin-top: 28px;
+  -webkit-transition: opacity 0.1s linear;
+  -moz-transition: opacity 0.1s linear;
+  -o-transition: opacity 0.1s linear;
+  -ms-transition: opacity 0.1s linear;
+  transition: opacity 0.1s linear; }
+
+.seek-content {
+  position: relative; }
+
+.seek-right {
+  opacity: 0;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  background-clip: content-box;
+  width: 10%;
+  height: 100%;
+  z-index: 100;
+  right: 0;
+  top: 0;
+  margin-top: 28px;
+  -webkit-transition: opacity 0.1s linear;
+  -moz-transition: opacity 0.1s linear;
+  -o-transition: opacity 0.1s linear;
+  -ms-transition: opacity 0.1s linear;
+  transition: opacity 0.1s linear; }
+
+.strabo-popup-content:hover .seek-right,
+.strabo-popup-content:hover .seek-left {
+  opacity: 1; }
+
+.strabo-popup-close-button {
+  z-index: 150px; }
 
 .strabo-count-marker {
   margin-left: -12px;
@@ -117,6 +164,13 @@ img.strabo-popup-image {
   */
   text-align: center;
   vertical-align: middle; }
+
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 @-webkit-keyframes itsrainbow {
   0% {

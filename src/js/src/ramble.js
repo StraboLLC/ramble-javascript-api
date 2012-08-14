@@ -11,11 +11,15 @@ S.Ramble = function(map, rambleID, opts) {
 		this._error("rambleID parameter cannot be undefined.");
 	}
 	this.id = rambleID;
+	//Control Parameters
 	this.options = opts || {};
+	this.options.clustering = opts.clustering || false;
+	this.options.showRoutes = opts.showRoutes || false;
+	//Map Properties
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
 	this.MAP_HEIGHT = map.getSize().y;
-
+	//Media/Geodata Properties
 	this.videoLoaded = false;
 	this.currentPoint = 0;
 	this.title = "";
