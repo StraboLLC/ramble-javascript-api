@@ -3,7 +3,7 @@ S.Popup = L.Popup.extend({
 	connected: true,
 	options: {
 		minWidth: 50,
-		maxWidth: 300,
+		maxWidth: 360,
 		maxHeight: null,
 		autoPan: true,
 		closeButton: true,

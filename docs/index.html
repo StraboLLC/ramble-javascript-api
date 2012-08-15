@@ -33,6 +33,19 @@
 			<p>Use of this API is only available with written consent from Strabo, LLC.</p>
 
 			<h2>Implement the JavaScript API</h2>
+			<p>The Strabo Javascript API is built off of:</p>
+			<ul>
+				<li><a href="http://jquery.com" target="_blank">jQuery</a></li>
+				<li><a href="http://leaflet.cloudmade.com" target="_blank">Leaflet Maps</a></li>
+			</ul>
+			<p>You must first include jQuery and Leaflet in your code in order to use functions in the Ramble API.</p>
+			<pre><code class="html">&lt;!-- include relevant libraries (jquery and leaflet) --&gt;
+&lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" /&gt;
+&lt;!--[if lte IE 8]&gt;
+    &lt;link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /&gt;
+&lt;![endif]--&gt;
+&lt;script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"&gt;&lt;/script&gt;</code></pre>
 			<p>Include the Ramble JavaScript API using the following line of Code.</p>
 			<pre><code class="html">&lt;script src="http://api.strabo.co/build/ramble.min.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre>
 
@@ -60,6 +73,10 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 			<p>Once initialized, Ramble Videos can be manipulated using the API below.</p>
 
+			<h2>Custom Styling</h2>
+			The stylesheet for the SDK can be downloaded below. The stylesheet controls much of the marker/popup styling. Other components, like the marker can be changed through passing a custom marker to a S.Marker during construction. Leaflet has a great <a href="http://leaflet.cloudmade.com/examples/custom-icons.html" target="_blank">tutorial</a> for how to do this.
+
+			<a href="http://api.strabo.co/build/ramble.min.css">ramble.css</a>
 			<h2>API Reference</h2>
 
 			<ul class="toc">
@@ -118,7 +135,7 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<th>Description</th>
 				</tr>
 				<tr>
-					<td><code>constructued</code></td>
+					<td><code>constructed</code></td>
 					<td><code>Event</code></td>
 					<td>Triggered when the RambleList is constructed.</td>
 				</tr>

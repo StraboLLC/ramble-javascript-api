@@ -24,7 +24,7 @@ S.Util = {
 		video.controls = "controls";
 		video.setAttribute('class', 'strabo-popup-video');
 		video.style.maxWidth = "300px";
-		image.style.width = "300px";
+		video.style.width = "300px";
 		return video;
 	},
 	createPhoto: function(token) {
