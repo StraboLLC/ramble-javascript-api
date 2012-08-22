@@ -13,8 +13,6 @@ S.Ramble = function(map, rambleID, opts) {
 	this.id = rambleID;
 	//Control Parameters
 	this.options = opts || {};
-	this.options.clustering = opts.clustering || false;
-	this.options.showRoutes = opts.showRoutes || false;
 	//Map Properties
 	this.map = map;
 	this.MAP_WIDTH = map.getSize().x;
@@ -63,7 +61,7 @@ S.Ramble.prototype._processResponse = function(response) {
 	r.type = response.media_type;
 	r.start = new L.LatLng(r.latitude, r.longitude);
 	r._latLngs = S.Util.pointsToLatLngs(r.points);
-	r._icon = new S.Icon();
+	r._icon = r.options.icon || new S.Icon();
 	r.marker = new S.Marker(r.start, {
 		icon: r._icon,
 		count: 1
@@ -86,12 +84,21 @@ S.Ramble.prototype._processResponse = function(response) {
 			r.fireEvent("ended");
 		});
 		r.video.addEventListener("seeking", function() {
+			if(r.marker._popup) {
+				r.marker._popup.connected=false;
+			}
 			r._syncVideo();
 			r.fireEvent("seeking");
 		});
 		r.video.addEventListener("seeked", function() {
+			if(r.marker._popup) {
+				r.marker._popup.connected=false;
+			}
 			r._syncVideo();
 			r.fireEvent("seeked");
+			if(r.marker._popup) {
+				r.marker._popup.connected=true;
+			}
 		});
 		r.video.addEventListener("play", function() {
 			r.fireEvent("play");
@@ -128,6 +135,9 @@ S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
 	this.map.removeLayer(this.marker);
 };
+S.Ramble.prototype.hideRoute = function() {
+	if (this.polyline) this.map.removeLayer(this.polyline);
+}
 S.Ramble.prototype._initializeVideoPopup = function() {
 	if (this.type == "video") {
 		var container = document.createElement('div');
@@ -138,7 +148,13 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		this.video.width = "300"; /* 		this.video.style.width = (this.MAP_WIDTH / 4) + "px"; */
 		container.appendChild(videoTitle);
 		container.appendChild(this.video);
-		this.marker.bindPopup(container);
+		this.marker.bindPopup(container, {
+			autoPan:true
+		});
+		this.marker.on("click", function() {
+			$('.strabo-popup-close-button').css('z-index', '150');
+			this.openPopup();
+		})
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
 S.Ramble.prototype._initializePhotoPopup = function() {
@@ -151,7 +167,9 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		this.photo.width = "300"; /* 		this.photo.style.width = (this.MAP_WIDTH / 4) + "px"; */
 		container.appendChild(photoTitle);
 		container.appendChild(this.photo);
-		this.marker.bindPopup(container);
+		this.marker.bindPopup(container, {
+			autoPan:true
+		});
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 }
 S.Ramble.prototype._updateMap = function() {

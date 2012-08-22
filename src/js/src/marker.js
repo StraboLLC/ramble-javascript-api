@@ -66,6 +66,8 @@ S.Marker = L.Marker.extend({
 		$('.ss-capture').css('display', 'none');
 		var q = this.currentContentIndex;
 		$('.ss-capture')[q].style.display = 'block';
+		this.setIcon(this.children[this.currentContentIndex].options.icon);
+		this.setIconAngle(this.children[this.currentContentIndex].options.iconAngle)
 	},
 	moveLeft: function() {
 		this.currentContentIndex-=1;
@@ -75,5 +77,7 @@ S.Marker = L.Marker.extend({
 		$('.ss-capture').css('display', 'none');
 		var q = this.currentContentIndex;
 		$('.ss-capture')[q].style.display = 'block';
+		this.setIcon(this.children[this.currentContentIndex].options.icon);
+		this.setIconAngle(this.children[this.currentContentIndex].options.iconAngle)
 	}
 });

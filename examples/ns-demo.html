@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<meta name = "viewport" content = "user-scalable = no">
 	<title>API Test</title>
 
 	<link rel="stylesheet" href="../src/js/libs/leaflet/leaflet.css" type="text/css" />
@@ -9,7 +10,6 @@
 	<link href="/style.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="../build/jquery.min.js"></script>
 	<script type="text/javascript" src="../build/leaflet.min.js"></script>
-
 	<link rel="stylesheet" href="../build/ramble.min.css" type="text/css" />
 	<script type="text/javascript" src="../build/ramble.min.js"></script>
 
@@ -39,15 +39,21 @@
 /* 			tokens.push("60671797ea73b76cc295b9f08b5dfcdb7da29d0a327049253190dcbc442feb48"); */
 /* 			tokens.push("7f646da7ce71210620ae0bb2a5dd00aa8a2bc13f7acc40c0b7c4facb362ea316"); */
 /* 			tokens.push("9b5987daea1715e65d82af49ca89fe355bd79dc6b4e1c3c4f05f9f62b6135a15"); */
-/* 			tokens.push("b18388cda2bcc77837520e5d76019a10035a2483cc624e14cc2821c6522c4c2b"); */
-/* 			tokens.push("70fd5d25b2d93f0f6e88287a2a11d46b703d2a6df6fefbc478061c1469d8e489"); */
+			tokens.push("b18388cda2bcc77837520e5d76019a10035a2483cc624e14cc2821c6522c4c2b");
+			tokens.push("70fd5d25b2d93f0f6e88287a2a11d46b703d2a6df6fefbc478061c1469d8e489");
 
 			// Video
 
 			tokens.push("21ec2f915d844f4548a14f50b3f04d95c0cf2b0e522091031e32e42d617a5391");
 			tokens.push("19ef3d23137405ece910673240ca14ad5113f750ccb0557eb114d118366d4aed");
+			tokens.push("c19beda0c9d9c85ca222326701be7f26e18bc8bda3d186787b0d0cb7ad642d7d");
+
+			tokens.push("4f3f5b555385013f2bf99aab7f3df61213efdb9d858590477b77c18632ed89d7");
+			tokens.push("2018f3fba61f0a127699d00e3fbc9afe13fc4fc82a6f7c7853c2385786f0ebca");
+
 			list = new S.RambleList(map,tokens, {
 				clustering:true
+				/* 				showRoutes:true */
 			});
 			list.addEventListener("geodatapulled", function(data) {
 				console.log(data.size);

@@ -74,9 +74,25 @@ list = new S.RambleList(map,tokens);</code></pre>
 			<p>Once initialized, Ramble Videos can be manipulated using the API below.</p>
 
 			<h2>Custom Styling</h2>
-			The stylesheet for the SDK can be downloaded below. The stylesheet controls much of the marker/popup styling. Other components, like the marker can be changed through passing a custom marker to a S.Marker during construction. Leaflet has a great <a href="http://leaflet.cloudmade.com/examples/custom-icons.html" target="_blank">tutorial</a> for how to do this.
+			<p>The stylesheet for the SDK can be downloaded below. The stylesheet controls much of the marker/popup styling. Other components, like the marker can be changed through passing a custom marker to a S.Marker during construction. Leaflet has a great <a href="http://leaflet.cloudmade.com/examples/custom-icons.html" target="_blank">tutorial</a> for how to do this.</p>
 
-			<a href="http://api.strabo.co/build/ramble.min.css">ramble.css</a>
+			<p><a href="http://api.strabo.co/build/ramble.min.css">ramble.css</a></p>
+
+			<p>In addition, custom marker icons just as Leaflet can use custom images as icons. Simply initialize an instance of a custom L.Icon, as shown in the example below.</p>
+
+			<pre><code>var myIcon = new L.Icon({
+    iconUrl: 'my-icon.png',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    shadowUrl: 'my-icon-shadow.png',
+    shadowSize: [68, 95],
+    shadowAnchor: [22, 94]
+});
+
+var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"];
+list = new S.RambleList( map, tokens, { icon: myIcon });</code></pre>
+
 			<h2>API Reference</h2>
 
 			<ul class="toc">
@@ -126,6 +142,12 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>false</code></td>
 					<td>Determines whether the ramble should show its route on the page load or only when the marker has been clicked.</td>
 				</tr>
+				<tr>
+					<td><code>icon</code></td>
+					<td><code><a target="_blank" href="http://leaflet.cloudmade.com/reference.html#icon">L.Icon</a></code></td>
+					<td><code>new S.Icon</code></td>
+					<td>Allows a custom icon to be specified.</td>
+				</tr>
 			</table>
 			<h4 id="ramblelist_events">Events</h4>
 			<table>
@@ -155,6 +177,11 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td>Fired when the RambleList is hidden.</td>
 				</tr>
 				<tr>
+					<td><code>hideRoutes</code></td>
+					<td><code>Event</code></td>
+					<td>Fired when the RambleList routes are made invisible.</td>
+				</tr>
+				<tr>
 					<td><code>cluster</code></td>
 					<td><code>Event</code></td>
 					<td>Fired when the markers in a RambleList cluster.</td>
@@ -179,6 +206,12 @@ list = new S.RambleList(map,tokens);</code></pre>
 					<td><code>&nbsp;</code></td>
 					<td><code>&nbsp;</code></td>
 					<td>Hides all Rambles in the RambleList</td>
+				</tr>
+				<tr>
+					<td><code>hideRoutes</code></td>
+					<td><code>&nbsp;</code></td>
+					<td><code>&nbsp;</code></td>
+					<td>Hides all Ramble routes in the RambleList</td>
 				</tr>
 				<tr>
 					<td><code>findRambleByToken</code></td>

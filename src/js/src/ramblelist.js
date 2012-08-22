@@ -1,15 +1,14 @@
 S.RambleList = function(map, ids, options) {
 	this.options = options || {};
-	this.options.clustering = options.clustering || false;
-	this.options.showRoutes = options.showRoutes || false;
 	this.map = map;
+	var map = this.map;
 	this.ids = ids;
 	this.size = ids.length;
 	this.completed = 0;
 	this.rambles = [];
 	var theRambleList = this,
-		clustering = this.options.clustering || false,
-		showRoutes = this.options.showRoutes || false;
+		clustering = this.options.clustering,
+		showRoutes = this.options.showRoutes ;
 	for (var x in ids) {
 		var aRamble = new S.Ramble(map, ids[x], {
 			addToMap: false,
@@ -19,9 +18,9 @@ S.RambleList = function(map, ids, options) {
 		});
 		aRamble.addEventListener("geodatapulled", function() {
 			this.completed += 1;
-			if(this.completed == this.size) {
+			if (this.completed == this.size) {
 				this.fireEvent("geodatapulled", {
-					size:this.size
+					size: this.size
 				});
 			}
 		}, theRambleList);
@@ -37,19 +36,25 @@ S.RambleList = function(map, ids, options) {
 			});
 		}
 	}
-	this.fireEvent("constructed",this);
+	this.fireEvent("constructed", this);
 };
 S.RambleList.prototype.show = function() {
 	for (var x in this.rambles) {
 		this.rambles[x].show();
 	}
-	this.fireEvent("show",this);
+	this.fireEvent("show", this);
 };
 S.RambleList.prototype.hide = function() {
 	for (var x in this.rambles) {
 		this.rambles[x].hide();
 	}
-	this.fireEvent("hide",this);
+	this.fireEvent("hide", this);
+};
+S.RambleList.prototype.hideRoutes = function() {
+	for (var x in this.rambles) {
+		this.rambles[x].hideRoute();
+	}
+	this.fireEvent("hideRoutes", this);
 };
 // Clustering Algorithm
 S.RambleList.prototype.checkMarkers = function() {
@@ -57,7 +62,7 @@ S.RambleList.prototype.checkMarkers = function() {
 		this.map.removeLayer(this.displayMarkers[x]);
 	}
 	this.displayMarkers = [];
-	// Will wait until all markers in the RambleList have been creat
+	// Will wait until all markers in the RambleList have been created
 	var shouldProceed = true;
 	for (x in this.rambles) {
 		if (!this.rambles[x].marker) {
@@ -79,20 +84,7 @@ S.RambleList.prototype.checkMarkers = function() {
 				var mapDist = Math.sqrt(Math.pow(xMapDist, 2) + Math.pow(yMapDist, 2));
 				if (mapDist < (mapSize * 0.05)) {
 					shouldCluster = true;
-					var string = "Merging a ";
-					if (tmp.isClusterMarker()) {
-						string += "clustermarker ";
-					} else {
-						string += "non-clustermarker ";
-					}
-					string += "with a "
-					if (tmp2.isClusterMarker()) {
-						string += "clustermarker";
-					} else {
-						string += "non-clustermarker";
-					}
-					string += ". The current count for the clustermarker is " + (tmp.getCount() + tmp2.getCount());
-					//console.log(string);
+
 					this.displayMarkers[y] = new S.Marker(new L.LatLng((tmp.getLatLng().lat + tmp2.getLatLng().lat) / 2, (tmp.getLatLng().lng + tmp2.getLatLng().lng) / 2), {
 						icon: new L.HtmlIcon({
 							html: "<div class='strabo-count-marker'>" + (tmp.getCount() + tmp2.getCount()) + "</div>"
@@ -100,6 +92,10 @@ S.RambleList.prototype.checkMarkers = function() {
 						count: tmp.getCount() + tmp2.getCount(),
 						isClusterMarker: true
 					});
+					this.displayMarkers[y].bounds = new L.LatLngBounds();
+					this.displayMarkers[y].bounds.extend(tmp.getLatLng());
+					this.displayMarkers[y].bounds.extend(tmp2.getLatLng());
+					this.displayMarkers[y].htmlIcon = this.displayMarkers[y].options.icon;
 					this.displayMarkers[y].generatedMarker = true;
 					this.displayMarkers[y].children = [];
 					this.displayMarkers[y].children = this.displayMarkers[y].children.concat(this.pullChildren(tmp));
@@ -107,16 +103,24 @@ S.RambleList.prototype.checkMarkers = function() {
 					if (this.map.getZoom() >= this.map.getMaxZoom()) {
 						var popupContent = '<div class="seek-left unselectable"></div><div class="seek-content">';
 						for (var z in this.displayMarkers[y].children) {
-							//console.log(this.displayMarkers[y].children[z].isClusterMarker());
 							popupContent += '<div class="ss-capture unselectable">';
 							popupContent += this.displayMarkers[y].children[z]._popup._content.innerHTML;
 							popupContent += '</div>';
 						}
 						popupContent += '</div><div class="seek-right unselectable"></div>';
-						this.displayMarkers[y].bindPopup(popupContent);
+						this.displayMarkers[y].bindPopup(popupContent, {
+							autoPan:true
+						});
 						this.displayMarkers[y].on("click", function() {
-							//console.log("Click Detected. Expanding " + this.children.length + " child nodes.");
+
+							var marker = this;
 							this.openPopup(this._popup);
+							this.setIcon(this.children[this.currentContentIndex].options.icon);
+							this.setIconAngle(this.children[this.currentContentIndex].options.iconAngle)
+							map.on("click", function() {
+								marker.setIcon(marker.htmlIcon);
+								marker.setIconAngle(null);
+							});
 							$('.ss-capture').css('display', 'none');
 							var q = this.currentContentIndex;
 							$('.ss-capture')[q].style.display = 'block';
@@ -127,18 +131,19 @@ S.RambleList.prototype.checkMarkers = function() {
 							$('.seek-left').click(function() {
 								pq.moveLeft();
 							});
-							$('.strabo-popup-close-button').css('z-index','150');
+							$('.strabo-popup-close-button').css('z-index', '150');
 						});
 					} else {
 						this.displayMarkers[y].on("click", function() {
-							map.setView(this.getLatLng(), map.getZoom());
-							map.zoomIn();
+							map.fitBounds(this.bounds);
 						});
 					}
-				} else {}
+				} else {
+
+				}
 			}
 			if (!shouldCluster) {
-				//console.log("Forming a new cluster.");
+
 				this.displayMarkers.push(tmp);
 			}
 		}
@@ -146,7 +151,7 @@ S.RambleList.prototype.checkMarkers = function() {
 	for (x in this.displayMarkers) {
 		this.map.addLayer(this.displayMarkers[x]);
 	}
-	this.fireEvent("cluster",this);
+	this.fireEvent("cluster", this);
 };
 // Method for recursively grabbing child elements.
 S.RambleList.prototype.pullChildren = function(marker) {
@@ -160,7 +165,11 @@ S.RambleList.prototype.pullChildren = function(marker) {
 	}
 	return result;
 };
-
+S.RambleList.prototype.updateMarkers = function() {
+	for(var x in this.displayMarkers) {
+		this.displayMarkers[x].update();
+	}
+}
 S.RambleList.prototype.findRambleByToken = function(token) {
 	var result;
 	for (var x in this.rambles) {

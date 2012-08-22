@@ -117,11 +117,11 @@
 	background-image: url(images/popup-close.png);
 	background-position:center center;
 	background-repeat:no-repeat;
-	z-index: 150px;
+
 }
 
 video.strabo-popup-video {
-
+	border-radius:8px;
 }
 
 img.strabo-popup-image {
@@ -145,6 +145,7 @@ img.strabo-popup-image {
 	-o-transition: background-color 0.1s linear;
 	-ms-transition: background-color 0.1s linear;
 	transition: background-color 0.1s linear;
+	cursor: pointer;
 }
 .seek-content {
 	position:relative;
@@ -168,11 +169,12 @@ img.strabo-popup-image {
 	-o-transition: background-color 0.1s linear;
 	-ms-transition: background-color 0.1s linear;
 	transition: background-color 0.1s linear;
+	cursor: pointer;
 }
 .strabo-popup-content:hover .seek-right,
 .strabo-popup-content:hover .seek-left {
 	background-color:rgba(255,255,255,.3);
 }
 .strabo-popup-close-button {
-	z-index: 150px;
+
 }
