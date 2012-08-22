@@ -123,23 +123,39 @@ S.RambleList.prototype.checkMarkers = function() {
 								marker.setIcon(marker.htmlIcon);
 								marker.setIconAngle(null);
 							});
-							for (var q in this.children) {
-								var content = this._popup._container;
-								var child = this.children[q];
-								var token = this.children[q].token;
-								var video = content.getElementsByTagName("video")[q];
-								var ramble = theRambleList.findRambleByToken(token);
-								console.log(token);
-							}
+							var marker = marker;
+							var content = this._popup._container;
+							var child = this.children[this.currentContentIndex];
+							var token = this.children[this.currentContentIndex].token;
+							var video = content.getElementsByTagName("video")[this.currentContentIndex];
+							var ramble = theRambleList.findRambleByToken(token);
+							console.log(token);
+							theRambleList.addMarkerListeners(marker, video, ramble);
 							$('.ss-capture').css('display', 'none');
 							var q = this.currentContentIndex;
 							$('.ss-capture')[q].style.display = 'block';
 							var pq = this;
 							$('.seek-right').click(function() {
 								pq.moveRight();
+								var marker = marker;
+								var content = pq._popup._container;
+								var child = pq.children[q];
+								var token = pq.children[q].token;
+								var video = content.getElementsByTagName("video")[q];
+								var ramble = theRambleList.findRambleByToken(token);
+								console.log(token);
+								theRambleList.addMarkerListeners(marker, video, ramble);
 							});
 							$('.seek-left').click(function() {
 								pq.moveLeft();
+								var marker = marker;
+								var content = pq._popup._container;
+								var child = pq.children[q];
+								var token = pq.children[q].token;
+								var video = content.getElementsByTagName("video")[q];
+								var ramble = theRambleList.findRambleByToken(token);
+								console.log(token);
+								theRambleList.addMarkerListeners(marker, video, ramble);
 							});
 							$('.strabo-popup-close-button').css('z-index', '150');
 						});
@@ -234,4 +250,37 @@ S.RambleList.prototype._error = function(parameter) {
 		"text": parameter
 	});
 	if (console) console.error(msg);
+};
+S.RambleList.prototype.addMarkerListeners = function(marker, video, ramble) {
+	video.addEventListener('timeupdate', function() {
+		ramble._updateMap(marker);
+		ramble.fireEvent("timeupdate");
+	});
+	video.addEventListener("ended", function() {
+		ramble.reset(marker);
+		ramble.fireEvent("ended");
+	});
+	video.addEventListener("seeking", function() {
+		if (marker._popup) {
+			marker._popup.connected = false;
+		}
+		ramble._syncVideo(marker);
+		ramble.fireEvent("seeking");
+	});
+	video.addEventListener("seeked", function() {
+		if (marker._popup) {
+			marker._popup.connected = false;
+		}
+		ramble._syncVideo(marker);
+		ramble.fireEvent("seeked");
+		if (marker._popup) {
+			marker._popup.connected = true;
+		}
+	});
+	video.addEventListener("play", function() {
+		ramble.fireEvent("play");
+	});
+	video.addEventListener("pause", function() {
+		ramble.fireEvent("pause");
+	});
 };
