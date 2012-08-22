@@ -8,7 +8,7 @@ S.RambleList = function(map, ids, options) {
 	this.rambles = [];
 	var theRambleList = this,
 		clustering = this.options.clustering,
-		showRoutes = this.options.showRoutes ;
+		showRoutes = this.options.showRoutes;
 	for (var x in ids) {
 		var aRamble = new S.Ramble(map, ids[x], {
 			addToMap: false,
@@ -58,6 +58,7 @@ S.RambleList.prototype.hideRoutes = function() {
 };
 // Clustering Algorithm
 S.RambleList.prototype.checkMarkers = function() {
+	var theRambleList = this;
 	for (var x in this.displayMarkers) {
 		this.map.removeLayer(this.displayMarkers[x]);
 	}
@@ -67,6 +68,8 @@ S.RambleList.prototype.checkMarkers = function() {
 	for (x in this.rambles) {
 		if (!this.rambles[x].marker) {
 			shouldProceed = false;
+		} else {
+			this.rambles[x].marker.token = this.rambles[x].token;
 		}
 	}
 	if (shouldProceed) {
@@ -84,7 +87,6 @@ S.RambleList.prototype.checkMarkers = function() {
 				var mapDist = Math.sqrt(Math.pow(xMapDist, 2) + Math.pow(yMapDist, 2));
 				if (mapDist < (mapSize * 0.05)) {
 					shouldCluster = true;
-
 					this.displayMarkers[y] = new S.Marker(new L.LatLng((tmp.getLatLng().lat + tmp2.getLatLng().lat) / 2, (tmp.getLatLng().lng + tmp2.getLatLng().lng) / 2), {
 						icon: new L.HtmlIcon({
 							html: "<div class='strabo-count-marker'>" + (tmp.getCount() + tmp2.getCount()) + "</div>"
@@ -109,18 +111,26 @@ S.RambleList.prototype.checkMarkers = function() {
 						}
 						popupContent += '</div><div class="seek-right unselectable"></div>';
 						this.displayMarkers[y].bindPopup(popupContent, {
-							autoPan:true
+							autoPan: true
 						});
 						this.displayMarkers[y].on("click", function() {
-
 							var marker = this;
 							this.openPopup(this._popup);
 							this.setIcon(this.children[this.currentContentIndex].options.icon);
 							this.setIconAngle(this.children[this.currentContentIndex].options.iconAngle)
 							map.on("click", function() {
+								theRambleList.hideRoutes();
 								marker.setIcon(marker.htmlIcon);
 								marker.setIconAngle(null);
 							});
+							for (var q in this.children) {
+								var content = this._popup._container;
+								var child = this.children[q];
+								var token = this.children[q].token;
+								var video = content.getElementsByTagName("video")[q];
+								var ramble = theRambleList.findRambleByToken(token);
+								console.log(token);
+							}
 							$('.ss-capture').css('display', 'none');
 							var q = this.currentContentIndex;
 							$('.ss-capture')[q].style.display = 'block';
@@ -138,12 +148,9 @@ S.RambleList.prototype.checkMarkers = function() {
 							map.fitBounds(this.bounds);
 						});
 					}
-				} else {
-
-				}
+				} else {}
 			}
 			if (!shouldCluster) {
-
 				this.displayMarkers.push(tmp);
 			}
 		}
@@ -166,7 +173,7 @@ S.RambleList.prototype.pullChildren = function(marker) {
 	return result;
 };
 S.RambleList.prototype.updateMarkers = function() {
-	for(var x in this.displayMarkers) {
+	for (var x in this.displayMarkers) {
 		this.displayMarkers[x].update();
 	}
 }

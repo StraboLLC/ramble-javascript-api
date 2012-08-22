@@ -135,7 +135,7 @@ S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
 	this.map.removeLayer(this.marker);
 };
-S.Ramble.prototype.hideRoute = function() {
+S.Ramble.prototype.hide = function() {
 	if (this.polyline) this.map.removeLayer(this.polyline);
 }
 S.Ramble.prototype._initializeVideoPopup = function() {

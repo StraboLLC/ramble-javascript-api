@@ -76,11 +76,11 @@ list = new S.RambleList(map,tokens);</code></pre>
 			<h2>Custom Styling</h2>
 			<p>The stylesheet for the SDK can be downloaded below. The stylesheet controls much of the marker/popup styling. Other components, like the marker can be changed through passing a custom marker to a S.Marker during construction. Leaflet has a great <a href="http://leaflet.cloudmade.com/examples/custom-icons.html" target="_blank">tutorial</a> for how to do this.</p>
 
-			<p><a href="http://api.strabo.co/build/ramble.min.css">ramble.css</a></p>
+			<p><code class="javascript"><a href="http://api.strabo.co/build/ramble.min.css">ramble.css</a></code></p>
 
 			<p>In addition, custom marker icons just as Leaflet can use custom images as icons. Simply initialize an instance of a custom L.Icon, as shown in the example below.</p>
 
-			<pre><code>var myIcon = new L.Icon({
+			<pre><code class="javascript">var myIcon = new L.Icon({
     iconUrl: 'my-icon.png',
     iconSize: [38, 95],
     iconAnchor: [22, 94],
