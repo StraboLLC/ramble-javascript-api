@@ -66,6 +66,7 @@ S.Ramble.prototype._processResponse = function(response) {
 		icon: r._icon,
 		count: 1
 	});
+	r.marker.token = r.token;
 	r.marker.setIconAngle(Math.round((r.heading)));
 	if (r._latLngs.length > 1) {
 		r.polyline = new L.Polyline(r._latLngs, {

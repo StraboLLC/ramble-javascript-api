@@ -6,7 +6,7 @@ S.RambleList = function(map, ids, options) {
 	this.size = ids.length;
 	this.completed = 0;
 	this.rambles = [];
-	this.cluserInterval = options.clusterInterval || 0.05;
+	this.clusterInterval = this.options.clusterInterval || 0.05;
 	var theRambleList = this,
 		clustering = this.options.clustering,
 		showRoutes = this.options.showRoutes;
@@ -114,6 +114,7 @@ S.RambleList.prototype.checkMarkers = function() {
 							autoPan: true
 						});
 						this.displayMarkers[y].on("click", function() {
+							this.currentContentIndex=0;
 							var marker = this;
 							this.openPopup(this._popup);
 							this.setIcon(this.children[this.currentContentIndex].options.icon);
@@ -135,7 +136,6 @@ S.RambleList.prototype.checkMarkers = function() {
 							var token = this.children[this.currentContentIndex].token;
 							var video = content.getElementsByTagName("video")[this.currentContentIndex];
 							var ramble = theRambleList.findRambleByToken(token);
-							console.log(ramble);
 							theRambleList.addMarkerListeners(marker, video, ramble);
 							ramble._syncVideo(marker, video);
 							$('.ss-capture').css('display', 'none');
@@ -203,7 +203,6 @@ S.RambleList.prototype.updateMarkers = function() {
 S.RambleList.prototype.findRambleByToken = function(token) {
 	var result;
 	for (var x in this.rambles) {
-		console.log(this.rambles[x]);
 		if (this.rambles[x] && this.rambles[x].token == token) {
 			result = this.rambles[x];
 		}
