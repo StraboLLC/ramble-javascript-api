@@ -51,10 +51,12 @@ S.RambleList.prototype.hide = function() {
 	this.fireEvent("hide", this);
 };
 S.RambleList.prototype.hideRoutes = function() {
-	for (var x in this.rambles) {
-		this.rambles[x].hideRoute();
+	if (!this.options.showRoutes) {
+		for (var x in this.rambles) {
+			this.rambles[x].hideRoute();
+		}
+		this.fireEvent("hideRoutes", this);
 	}
-	this.fireEvent("hideRoutes", this);
 };
 // Clustering Algorithm
 S.RambleList.prototype.checkMarkers = function() {
@@ -94,9 +96,14 @@ S.RambleList.prototype.checkMarkers = function() {
 						count: tmp.getCount() + tmp2.getCount(),
 						isClusterMarker: true
 					});
+					this.displayMarkers[y].position = new L.LatLng(this.displayMarkers[y].getLatLng().lat, this.displayMarkers[y].getLatLng().lng);
 					this.displayMarkers[y].bounds = new L.LatLngBounds();
 					this.displayMarkers[y].bounds.extend(tmp.getLatLng());
 					this.displayMarkers[y].bounds.extend(tmp2.getLatLng());
+					if (tmp2.bounds) {
+						this.displayMarkers[y].bounds.extend(tmp2.bounds.getNorthEast());
+						this.displayMarkers[y].bounds.extend(tmp2.bounds.getSouthWest());
+					}
 					this.displayMarkers[y].htmlIcon = this.displayMarkers[y].options.icon;
 					this.displayMarkers[y].generatedMarker = true;
 					this.displayMarkers[y].children = [];
@@ -121,40 +128,46 @@ S.RambleList.prototype.checkMarkers = function() {
 							map.on("click", function() {
 								theRambleList.hideRoutes();
 								marker.setIcon(marker.htmlIcon);
+								marker.setLatLng(new L.LatLng(marker.position.lat, marker.position.lng));
 								marker.setIconAngle(null);
 							});
-							var marker = marker;
+							map.on("popupclose", function() {
+								theRambleList.hideRoutes();
+								marker.setIcon(marker.htmlIcon);
+								marker.setLatLng(new L.LatLng(marker.position.lat, marker.position.lng));
+								marker.setIconAngle(null);
+							});
 							var content = this._popup._container;
 							var child = this.children[this.currentContentIndex];
 							var token = this.children[this.currentContentIndex].token;
 							var video = content.getElementsByTagName("video")[this.currentContentIndex];
 							var ramble = theRambleList.findRambleByToken(token);
-							console.log(token);
 							theRambleList.addMarkerListeners(marker, video, ramble);
+							ramble._syncVideo(marker, video);
 							$('.ss-capture').css('display', 'none');
 							var q = this.currentContentIndex;
 							$('.ss-capture')[q].style.display = 'block';
 							var pq = this;
 							$('.seek-right').click(function() {
 								pq.moveRight();
-								var marker = marker;
+								var q = pq.currentContentIndex;
 								var content = pq._popup._container;
 								var child = pq.children[q];
 								var token = pq.children[q].token;
 								var video = content.getElementsByTagName("video")[q];
 								var ramble = theRambleList.findRambleByToken(token);
-								console.log(token);
+								ramble._syncVideo(marker, video);
 								theRambleList.addMarkerListeners(marker, video, ramble);
 							});
 							$('.seek-left').click(function() {
 								pq.moveLeft();
-								var marker = marker;
+								var q = pq.currentContentIndex;
 								var content = pq._popup._container;
 								var child = pq.children[q];
 								var token = pq.children[q].token;
 								var video = content.getElementsByTagName("video")[q];
 								var ramble = theRambleList.findRambleByToken(token);
-								console.log(token);
+								ramble._syncVideo(marker, video);
 								theRambleList.addMarkerListeners(marker, video, ramble);
 							});
 							$('.strabo-popup-close-button').css('z-index', '150');
@@ -253,25 +266,25 @@ S.RambleList.prototype._error = function(parameter) {
 };
 S.RambleList.prototype.addMarkerListeners = function(marker, video, ramble) {
 	video.addEventListener('timeupdate', function() {
-		ramble._updateMap(marker);
+		ramble._updateMap(marker, video);
 		ramble.fireEvent("timeupdate");
 	});
 	video.addEventListener("ended", function() {
-		ramble.reset(marker);
+		ramble.reset(marker, video);
 		ramble.fireEvent("ended");
 	});
 	video.addEventListener("seeking", function() {
 		if (marker._popup) {
 			marker._popup.connected = false;
 		}
-		ramble._syncVideo(marker);
+		ramble._syncVideo(marker, video);
 		ramble.fireEvent("seeking");
 	});
 	video.addEventListener("seeked", function() {
 		if (marker._popup) {
 			marker._popup.connected = false;
 		}
-		ramble._syncVideo(marker);
+		ramble._syncVideo(marker, video);
 		ramble.fireEvent("seeked");
 		if (marker._popup) {
 			marker._popup.connected = true;

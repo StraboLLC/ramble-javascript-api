@@ -174,12 +174,13 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		});
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 };
-S.Ramble.prototype._updateMap = function(aMarker) {
+S.Ramble.prototype._updateMap = function(aMarker, aVideo) {
 	var marker = aMarker || false;
+	var video = aVideo || this.video;
 	if (this.type == "video" && this.points) {
 		var pointTime;
-		var cTime = this.video.currentTime;
-		if (cTime > this.video.duration) { // If video is done.
+		var cTime = video.currentTime;
+		if (cTime > video.duration) { // If video is done.
 			this._error('wtf');
 			this.currentPoint = 0;
 		} else {
@@ -199,10 +200,11 @@ S.Ramble.prototype._updateMap = function(aMarker) {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-S.Ramble.prototype._syncVideo = function(aMarker) {
+S.Ramble.prototype._syncVideo = function(aMarker, aVideo) {
 	var marker = aMarker || false;
-	if (this.video) {
-		this._getPointByTime(this.video.currentTime);
+	var video = aVideo || this.video;
+	if (video) {
+		this._getPointByTime(video.currentTime);
 		if(marker) {
 			this._setCurrentPointWithMarker(this.currentPoint, marker);
 		} else {
@@ -210,10 +212,11 @@ S.Ramble.prototype._syncVideo = function(aMarker) {
 		}
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-S.Ramble.prototype.reset = function(aMarker) {
+S.Ramble.prototype.reset = function(aMarker, aVideo) {
 	var marker = aMarker || false;
-	if (this.video) {
-		this.setTime(0, marker);
+	var video = aVideo || this.video;
+	if (video) {
+		this.setTime(0, marker, video);
 		this.fireEvent("reset");
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
@@ -246,7 +249,7 @@ S.Ramble.prototype._setCurrentPoint = function(currentPoint) {
 S.Ramble.prototype._setCurrentPointWithMarker = function(currentPoint, marker) {
 	if (this.video && marker) {
 		this.currentPoint = currentPoint;
-		var currentAngle = marker.getIconAngle();
+		var currentAngle = marker.getIconAngle() || 0;
 		var nextAngle = Math.round(this.points[this.currentPoint].heading);
 		var delta = (nextAngle - currentAngle);
 		if (delta > 180) {
@@ -261,11 +264,12 @@ S.Ramble.prototype.getTime = function() {
 		return this.video.currentTime;
 	} else this._error(S.Util.ERROR_NOT_VIDEO);
 };
-S.Ramble.prototype.setTime = function(newTime, aMarker) {
+S.Ramble.prototype.setTime = function(newTime, aMarker, aVideo) {
 	var marker = aMarker || false;
-	if (this.video) {
-		if (newTime < 0 || newTime >= this.video.duration) this._error("Suggested time is out of bounds.");
-		this.video.currentTime = 0;
+	var video = aVideo || this.video
+	if (video) {
+		if (newTime < 0 || newTime >= video.duration) this._error("Suggested time is out of bounds.");
+		video.currentTime = 0;
 		this._getPointByTime(newTime);
 		if(marker) {
 			this._setCurrentPointWithMarker(this.currentPoint, marker);
