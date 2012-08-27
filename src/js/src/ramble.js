@@ -85,20 +85,20 @@ S.Ramble.prototype._processResponse = function(response) {
 			r.fireEvent("ended");
 		});
 		r.video.addEventListener("seeking", function() {
-			if(r.marker._popup) {
-				r.marker._popup.connected=false;
+			if (r.marker._popup) {
+				r.marker._popup.connected = false;
 			}
 			r._syncVideo();
 			r.fireEvent("seeking");
 		});
 		r.video.addEventListener("seeked", function() {
-			if(r.marker._popup) {
-				r.marker._popup.connected=false;
+			if (r.marker._popup) {
+				r.marker._popup.connected = false;
 			}
 			r._syncVideo();
 			r.fireEvent("seeked");
-			if(r.marker._popup) {
-				r.marker._popup.connected=true;
+			if (r.marker._popup) {
+				r.marker._popup.connected = true;
 			}
 		});
 		r.video.addEventListener("play", function() {
@@ -150,7 +150,7 @@ S.Ramble.prototype._initializeVideoPopup = function() {
 		container.appendChild(videoTitle);
 		container.appendChild(this.video);
 		this.marker.bindPopup(container, {
-			autoPan:true
+			autoPan: true
 		});
 		this.marker.on("click", function() {
 			$('.strabo-popup-close-button').css('z-index', '150');
@@ -171,7 +171,11 @@ S.Ramble.prototype._initializePhotoPopup = function() {
 		container.appendChild(photoTitle);
 		container.appendChild(this.photo);
 		this.marker.bindPopup(container, {
-			autoPan:true
+			autoPan: true
+		});
+		this.marker.on("click", function() {
+			$('.strabo-popup-close-button').css('z-index', '150');
+			this.openPopup();
 		});
 	} else this._error(S.Util.ERROR_NOT_PHOTO);
 };
@@ -193,7 +197,7 @@ S.Ramble.prototype._updateMap = function(aMarker, aVideo) {
 				this.currentPoint++;
 				pointTime = this.points[this.currentPoint].timestamp;
 			}
-			if(marker) {
+			if (marker) {
 				this._setCurrentPointWithMarker(this.currentPoint, marker);
 			} else {
 				this._setCurrentPoint(this.currentPoint);
@@ -206,7 +210,7 @@ S.Ramble.prototype._syncVideo = function(aMarker, aVideo) {
 	var video = aVideo || this.video;
 	if (video) {
 		this._getPointByTime(video.currentTime);
-		if(marker) {
+		if (marker) {
 			this._setCurrentPointWithMarker(this.currentPoint, marker);
 		} else {
 			this._setCurrentPoint(this.currentPoint);
@@ -272,7 +276,7 @@ S.Ramble.prototype.setTime = function(newTime, aMarker, aVideo) {
 		if (newTime < 0 || newTime >= video.duration) this._error("Suggested time is out of bounds.");
 		video.currentTime = 0;
 		this._getPointByTime(newTime);
-		if(marker) {
+		if (marker) {
 			this._setCurrentPointWithMarker(this.currentPoint, marker);
 		} else {
 			this._setCurrentPoint(this.currentPoint);

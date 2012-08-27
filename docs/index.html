@@ -59,7 +59,7 @@
 			<pre><code class="javascript">// initialize the map on the "map" div
 var map = new L.Map('map');
 
-// create a CloudMade tile layer with style #997 (or use other provider of your choice)
+// create a Leaflet TileLayer using any valid tileservice. See section below on <a href="#map_layers">map layers</a>.
 var openCycleMap = new L.TileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png');
 
 // add the layer to the map
@@ -92,7 +92,76 @@ list = new S.RambleList(map,tokens);</code></pre>
 
 var tokens = ["e5aad1b391f4def639a30fd387ea7e51","3f96474a8a03ebc48f402b43d150a9fa"];
 list = new S.RambleList( map, tokens, { icon: myIcon });</code></pre>
-
+			<h2 id="sample_tokens">Sample Video Tokens</h2>
+			<pre><code>21ec2f915d844f4548a14f50b3f04d95c0cf2b0e522091031e32e42d617a5391
+19ef3d23137405ece910673240ca14ad5113f750ccb0557eb114d118366d4aed
+c19beda0c9d9c85ca222326701be7f26e18bc8bda3d186787b0d0cb7ad642d7d
+4f3f5b555385013f2bf99aab7f3df61213efdb9d858590477b77c18632ed89d7
+5eef4798ae3ced12f2a35018ba36809a005281473bf61b956c9b07f73c47acfd
+713d4745f7ca6102a043cdb70d150187a6344b91d8a415938c983475a3cb556e
+0ece5ed9aec262d054c91c49087e69c88364f2b74f91b7c051adf18a540527e0
+2524f9bf4145c18e08fed8929ca820155a1fa7bbdca012d438f81d417261bef3
+cc474705fd6154a6c5c96d42a0404f4b608147020431a0789766a5c907e2edee
+0e64f5f1167525e85496aab43fd957eceaaaab4e109f0b719db423ad24496ffd
+fa4bdc627ca431bbd49bf2ef296fe0a6920eecce44345e2cbc49d04536be1e31
+7936c62fbcbd6b92cc30da8239c979d2c5d870cf6958fb5b6aeb9d24ebe9736f
+b65a85afe5cf2e700270ca8a36d4cd50beb0ddf4666600fee634c38b1527ad88
+4673b6f2632cce4026c89622913aba6eab71312d6dda248c5dcdc8d5dbc12285
+b6a9015dd8c91a59098a09ee3fd4b6b1f1392c6961857de439563f2715c1b156
+6ab0d66eda9b4993e950c37c0e2341cb4e87f7a12feb63e14a259e95e7b1f758
+caedb4f88472bb5ede6a64aeb8c37193e6c7583c8e6f46b453e1af055de31e43</code></pre>
+			<h2 id="map_layers">Free Map Layers</h2>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Owner</th>
+					<th>License</th>
+					<th>URL</th>
+				</tr>
+				<tr>
+					<td>OpenCycleMap</td>
+					<td>Gravitystorm Ltd.</td>
+					<td><a href="http://www.thunderforest.com/terms/">Free for Commercial Use</a></td>
+					<td><a href="http://www.thunderforest.com/opencyclemap/">http://www.thunderforest.com/opencyclemap/</a></td>
+				</tr>
+				<tr>
+					<td>OpenTransportMap</td>
+					<td>Gravitystorm Ltd.</td>
+					<td><a href="http://www.thunderforest.com/terms/">Free for Commercial Use</a></td>
+					<td><a href="http://www.thunderforest.com/transport/">http://www.thunderforest.com/transport/</a></td>
+				</tr>
+				<tr>
+					<td>OpenLandscapeMap</td>
+					<td>Gravitystorm Ltd.</td>
+					<td><a href="http://www.thunderforest.com/terms/">Free for Commercial Use</a></td>
+					<td><a href="http://www.thunderforest.com/landscape/">http://www.thunderforest.com/landscape/</a></td>
+				</tr>
+				<tr>
+					<td>TopOSM</td>
+					<td>Lars Ahlzen</td>
+					<td><a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-by-SA</a></td>
+					<td><a href="http://toposm.com/us/index.html">http://toposm.com/us/index.html</a></td>
+				</tr>
+				<tr>
+					<td>Stamen Watercolor</td>
+					<td>Stamen Design</td>
+					<td>Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</td>
+					<td><a href="http://maps.stamen.com/watercolor">http://maps.stamen.com/watercolor</a></td>
+				</tr>
+				<tr>
+					<td>Stamen Terrain</td>
+					<td>Stamen Design</td>
+					<td>Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</td>
+					<td><a href="http://maps.stamen.com/terrain">http://maps.stamen.com/terrain</a></td>
+				</tr>
+				<tr>
+					<td>Stamen Toner</td>
+					<td>Stamen Design</td>
+					<td>Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</td>
+					<td><a href="http://maps.stamen.com/toner">http://maps.stamen.com/toner</a></td>
+				</tr>
+			</table>
+			<p>For more information, view <a href="http://wiki.openstreetmap.org/wiki/List_of_OSM_based_Services">other OSM-based derivative works</a>.
 			<h2>API Reference</h2>
 
 			<ul class="toc">
